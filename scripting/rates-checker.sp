@@ -21,7 +21,7 @@ public Plugin myinfo = {
     name = "Rates checker",
     author = "Dron-elektron",
     description = "Allows you to check player settings",
-    version = "0.1.0",
+    version = "1.0.0",
     url = "https://github.com/dronelektron/rates-checker"
 };
 
