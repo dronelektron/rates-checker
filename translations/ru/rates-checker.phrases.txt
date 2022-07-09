@@ -1,0 +1,17 @@
+"Phrases"
+{
+    "Player has invalid settings"
+    {
+        "ru"    "{default}У игрока {green}{1} {default}стоят недопустимые настройки"
+    }
+
+    "Player is no longer available"
+    {
+        "ru"    "Игрок больше недоступен"
+    }
+
+    "Console variable item"
+    {
+        "ru"    "{1} = {2} (мин = {3}, макс = {4})"
+    }
+}

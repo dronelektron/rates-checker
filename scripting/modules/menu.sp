@@ -18,7 +18,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         int target = GetClientOfUserId(userId);
 
         if (target == 0) {
-            // TODO: Message
+            MessageReply_PlayerIsNoLongerAvailable(param1);
 
             return 0;
         }
@@ -36,10 +36,11 @@ void Menu_PlayerRates(int client, int target) {
 
     menu.SetTitle("%N", target);
 
-    Menu_AddConsoleVariableItem(menu, CONSOLE_VARIABLE_INTERP, target);
-    Menu_AddConsoleVariableItem(menu, CONSOLE_VARIABLE_CMD_RATE, target);
-    Menu_AddConsoleVariableItem(menu, CONSOLE_VARIABLE_UPDATE_RATE, target);
-    Menu_AddConsoleVariableItem(menu, CONSOLE_VARIABLE_RATE, target);
+    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_INTERP);
+    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_INTERP_RATIO);
+    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_CMD_RATE);
+    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_UPDATE_RATE);
+    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_RATE);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -73,12 +74,16 @@ void Menu_AddPlayers(Menu menu) {
     }
 }
 
-void Menu_AddConsoleVariableItem(Menu menu, const char[] consoleVariable, int target) {
+void Menu_AddConsoleVariableItem(Menu menu, int client, int target, const char[] consoleVariable) {
     char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char minValue[CONSOLE_VARIABLE_MAX_SIZE];
+    char maxValue[CONSOLE_VARIABLE_MAX_SIZE];
     char item[ITEM_MAX_SIZE];
 
+    Variable_GetByName(consoleVariable, minValue, true);
+    Variable_GetByName(consoleVariable, maxValue, false);
     Settings_Get(target, consoleVariable, value);
-    Format(item, sizeof(item), "%s = %s", consoleVariable, value);
+    Format(item, sizeof(item), "%T", "Console variable item", client, consoleVariable, value, minValue, maxValue);
 
     menu.AddItem("", item);
 }
