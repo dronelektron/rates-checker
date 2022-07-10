@@ -11,9 +11,32 @@
         "en"    "Player is no longer available"
     }
 
-    "Console variable item"
+    "Rates checker"
     {
-        "#format"   "{1:s},{2:s},{3:s},{4:s}"
-        "en"    "{1} = {2} (min = {3}, max = {4})"
+        "en"    "Rates checker"
+    }
+
+    "Player rates"
+    {
+        "#format"   "{1:N}"
+        "en"    "Rates of the player: {1}"
+    }
+
+    "Server rates"
+    {
+        "#format"   "{1:s}"
+        "en"    "Rates of the server: {1}"
+    }
+
+    "Minimum"
+    {
+        "#format"   "{1:s}"
+        "en"    "Minimum: {1}"
+    }
+
+    "Maximum"
+    {
+        "#format"   "{1:s}"
+        "en"    "Maximum: {1}"
     }
 }

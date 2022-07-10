@@ -1,6 +1,6 @@
 # Rates checker
 
-Allows you to check player settings:
+Allows you to check player rates:
 
 * cl_interp
 * cl_interp_ratio
@@ -27,4 +27,4 @@ Allows you to check player settings:
 
 ### Console Commands
 
-* sm_rateschecker - Open player settings menu
+* sm_rates - Open player rates menu
