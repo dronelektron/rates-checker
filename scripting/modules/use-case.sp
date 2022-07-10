@@ -26,6 +26,24 @@ public void Settings_Callback(QueryCookie cookie, int client, ConVarQueryResult 
     }
 }
 
+bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {
+    if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP)) {
+        return UseCase_IsInterpValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP_RATIO)) {
+        return UseCase_IsInterpRatioValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_CMD_RATE)) {
+        return UseCase_IsCmdRateValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_UPDATE_RATE)) {
+        return UseCase_IsUpdateRateValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_RATE)) {
+        return UseCase_IsRateValid(client);
+    } else {
+        ThrowError("Invalid console variable");
+    }
+
+    return false;
+}
+
 void UseCase_CheckSettings(int client) {
     bool isValidSettings = true;
 

@@ -28,6 +28,16 @@
         "en"    "Rates of the server: {1}"
     }
 
+    "Rate value good"
+    {
+        "en"    "OK"
+    }
+
+    "Rate value bad"
+    {
+        "en"    "Bad"
+    }
+
     "Minimum"
     {
         "#format"   "{1:s}"

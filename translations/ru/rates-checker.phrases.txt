@@ -25,6 +25,16 @@
         "ru"    "Рейты сервера: {1}"
     }
 
+    "Rate value good"
+    {
+        "ru"    "ОК"
+    }
+
+    "Rate value bad"
+    {
+        "ru"    "Отклонение"
+    }
+
     "Minimum"
     {
         "ru"    "Минимум: {1}"
