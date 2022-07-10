@@ -1,8 +1,8 @@
 "Phrases"
 {
-    "Player has invalid settings"
+    "Player has bad settings"
     {
-        "ru"    "{default}У игрока {green}{1} {default}стоят недопустимые настройки"
+        "ru"    "{default}У игрока {green}{1} {default}стоят плохие настройки"
     }
 
     "Player is no longer available"

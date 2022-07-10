@@ -1,9 +1,9 @@
-"Phrases"
+ "Phrases"
 {
-    "Player has invalid settings"
+    "Player has bad settings"
     {
         "#format"   "{1:N}"
-        "en"    "Player {1} has invalid settings"
+        "en"    "{default}Player {green}{1} {default}has bad settings"
     }
 
     "Player is no longer available"

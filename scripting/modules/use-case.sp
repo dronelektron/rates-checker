@@ -56,7 +56,7 @@ void UseCase_CheckSettings(int client) {
     if (!isValidSettings && Variable_IsNotificationsEnabled()) {
         for (int i = 1; i <= MaxClients; i++) {
             if (IsClientInGame(i) && UseCase_IsPlayerAdmin(i)) {
-                MessagePrint_PlayerHasInvalidSettings(client, i);
+                MessagePrint_PlayerHasBadSettings(client, i);
             }
         }
     }
