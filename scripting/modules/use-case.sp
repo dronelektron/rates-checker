@@ -9,14 +9,14 @@ void UseCase_QuerySettings(int client) {
     Settings_Set(client, CONSOLE_VARIABLE_UPDATE_RATE, CONSOLE_VARIABLE_UNDEFINED);
     Settings_Set(client, CONSOLE_VARIABLE_RATE, CONSOLE_VARIABLE_UNDEFINED);
 
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, Settings_Callback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, Settings_Callback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, Settings_Callback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, Settings_Callback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, Settings_Callback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCase_CheckSettingsCallback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCase_CheckSettingsCallback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCase_CheckSettingsCallback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCase_CheckSettingsCallback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCase_CheckSettingsCallback);
 }
 
-public void Settings_Callback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
+public void UseCase_CheckSettingsCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
@@ -24,6 +24,24 @@ public void Settings_Callback(QueryCookie cookie, int client, ConVarQueryResult 
     if (g_settingsCounter[client] == Settings_Size(client)) {
         UseCase_CheckSettings(client);
     }
+}
+
+bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {
+    if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP)) {
+        return UseCase_IsInterpValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP_RATIO)) {
+        return UseCase_IsInterpRatioValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_CMD_RATE)) {
+        return UseCase_IsCmdRateValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_UPDATE_RATE)) {
+        return UseCase_IsUpdateRateValid(client);
+    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_RATE)) {
+        return UseCase_IsRateValid(client);
+    } else {
+        ThrowError("Invalid console variable");
+    }
+
+    return false;
 }
 
 void UseCase_CheckSettings(int client) {
@@ -38,7 +56,7 @@ void UseCase_CheckSettings(int client) {
     if (!isValidSettings && Variable_IsNotificationsEnabled()) {
         for (int i = 1; i <= MaxClients; i++) {
             if (IsClientInGame(i) && UseCase_IsPlayerAdmin(i)) {
-                MessagePrint_PlayerHasInvalidSettings(client, i);
+                MessagePrint_PlayerHasBadSettings(client, i);
             }
         }
     }

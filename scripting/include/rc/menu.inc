@@ -6,6 +6,8 @@
 #define RATES_CHECKER "Rates checker"
 #define PLAYER_RATES "Player rates"
 #define SERVER_RATES "Server rates"
+#define RATE_VALUE_GOOD "Rate value good"
+#define RATE_VALUE_BAD "Rate value bad"
 #define MINIMUM "Minimum"
 #define MAXIMUM "Maximum"
 
