@@ -1,7 +1,9 @@
+static int g_lastUserId[MAXPLAYERS + 1];
+
 void Menu_Players(int client) {
     Menu menu = new Menu(MenuHandler_Players);
 
-    menu.SetTitle(RATES_CHECKER);
+    menu.SetTitle("%T", RATES_CHECKER, client);
 
     Menu_AddPlayers(menu);
 
@@ -13,17 +15,9 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         char info[USER_ID_MAX_SIZE];
 
         menu.GetItem(param2, info, sizeof(info));
+        g_lastUserId[param1] = StringToInt(info);
 
-        int userId = StringToInt(info);
-        int target = GetClientOfUserId(userId);
-
-        if (target == 0) {
-            MessageReply_PlayerIsNoLongerAvailable(param1);
-
-            return 0;
-        }
-
-        Menu_PlayerRates(param1, target);
+        Menu_LastPlayerRates(param1);
     } else if (action == MenuAction_End) {
         delete menu;
     }
@@ -31,24 +25,69 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
     return 0;
 }
 
+void Menu_LastPlayerRates(int client) {
+    int userId = g_lastUserId[client];
+    int target = GetClientOfUserId(userId);
+
+    if (target == 0) {
+        Menu_Players(client);
+        MessagePrint_PlayerIsNoLongerAvailable(client);
+    } else {
+        Menu_PlayerRates(client, target);
+    }
+}
+
 void Menu_PlayerRates(int client, int target) {
     Menu menu = new Menu(MenuHandler_PlayerRates);
 
-    menu.SetTitle("%N", target);
+    menu.SetTitle("%T", PLAYER_RATES, client, target);
 
-    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_INTERP);
-    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_INTERP_RATIO);
-    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_CMD_RATE);
-    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_UPDATE_RATE);
-    Menu_AddConsoleVariableItem(menu, client, target, CONSOLE_VARIABLE_RATE);
+    Menu_AddPlayerRateItem(menu, target, CONSOLE_VARIABLE_INTERP);
+    Menu_AddPlayerRateItem(menu, target, CONSOLE_VARIABLE_INTERP_RATIO);
+    Menu_AddPlayerRateItem(menu, target, CONSOLE_VARIABLE_CMD_RATE);
+    Menu_AddPlayerRateItem(menu, target, CONSOLE_VARIABLE_UPDATE_RATE);
+    Menu_AddPlayerRateItem(menu, target, CONSOLE_VARIABLE_RATE);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
 public int MenuHandler_PlayerRates(Menu menu, MenuAction action, int param1, int param2) {
-    if (action == MenuAction_Cancel && param2 == MenuCancel_ExitBack) {
+    if (action == MenuAction_Select) {
+        char info[USER_ID_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        Menu_ServerRates(param1, info);
+    } else if (action == MenuAction_Cancel && param2 == MenuCancel_ExitBack) {
         Menu_Players(param1);
+    } else if (action == MenuAction_End) {
+        delete menu;
+    }
+
+    return 0;
+}
+
+void Menu_ServerRates(int client, const char[] consoleVariable) {
+    Menu menu = new Menu(MenuHandler_ServerRates);
+
+    menu.SetTitle("%T", SERVER_RATES, client, consoleVariable);
+
+    Menu_AddServerRateItem(menu, client, consoleVariable);
+
+    menu.ExitBackButton = true;
+    menu.Display(client, MENU_TIME_FOREVER);
+}
+
+public int MenuHandler_ServerRates(Menu menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        char info[USER_ID_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        Menu_ServerRates(param1, info);
+    } else if (action == MenuAction_Cancel && param2 == MenuCancel_ExitBack) {
+        Menu_LastPlayerRates(param1);
     } else if (action == MenuAction_End) {
         delete menu;
     }
@@ -74,16 +113,27 @@ void Menu_AddPlayers(Menu menu) {
     }
 }
 
-void Menu_AddConsoleVariableItem(Menu menu, int client, int target, const char[] consoleVariable) {
+void Menu_AddPlayerRateItem(Menu menu, int target, const char[] consoleVariable) {
     char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char item[ITEM_MAX_SIZE];
+
+    Settings_Get(target, consoleVariable, value);
+    Format(item, sizeof(item), "%s %s", consoleVariable, value);
+
+    menu.AddItem(consoleVariable, item);
+}
+
+void Menu_AddServerRateItem(Menu menu, int client, const char[] consoleVariable) {
     char minValue[CONSOLE_VARIABLE_MAX_SIZE];
     char maxValue[CONSOLE_VARIABLE_MAX_SIZE];
-    char item[ITEM_MAX_SIZE];
+    char minItem[ITEM_MAX_SIZE];
+    char maxItem[ITEM_MAX_SIZE];
 
     Variable_GetByName(consoleVariable, minValue, true);
     Variable_GetByName(consoleVariable, maxValue, false);
-    Settings_Get(target, consoleVariable, value);
-    Format(item, sizeof(item), "%T", "Console variable item", client, consoleVariable, value, minValue, maxValue);
+    Format(minItem, sizeof(minItem), "%T", MINIMUM, client, minValue);
+    Format(maxItem, sizeof(maxItem), "%T", MAXIMUM, client, maxValue);
 
-    menu.AddItem("", item);
+    menu.AddItem(consoleVariable, minItem);
+    menu.AddItem(consoleVariable, maxItem);
 }
