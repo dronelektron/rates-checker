@@ -11,3 +11,6 @@
 #define CONSOLE_VARIABLE_CMD_RATE "cl_cmdrate"
 #define CONSOLE_VARIABLE_UPDATE_RATE "cl_updaterate"
 #define CONSOLE_VARIABLE_RATE "rate"
+
+#define MIN_VALUE_YES true
+#define MIN_VALUE_NO false

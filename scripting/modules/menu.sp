@@ -130,8 +130,8 @@ void Menu_AddServerRateItem(Menu menu, int client, const char[] consoleVariable)
     char minItem[ITEM_MAX_SIZE];
     char maxItem[ITEM_MAX_SIZE];
 
-    Variable_GetByName(consoleVariable, minValue, true);
-    Variable_GetByName(consoleVariable, maxValue, false);
+    Variable_GetByName(consoleVariable, minValue, MIN_VALUE_YES);
+    Variable_GetByName(consoleVariable, maxValue, MIN_VALUE_NO);
     Format(minItem, sizeof(minItem), "%T", MINIMUM, client, minValue);
     Format(maxItem, sizeof(maxItem), "%T", MAXIMUM, client, maxValue);
 
