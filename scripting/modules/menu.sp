@@ -29,7 +29,7 @@ void Menu_LastPlayerRates(int client) {
     int userId = g_lastUserId[client];
     int target = GetClientOfUserId(userId);
 
-    if (target == 0) {
+    if (target == INVALID_CLIENT) {
         Menu_Players(client);
         MessagePrint_PlayerIsNoLongerAvailable(client);
     } else {
