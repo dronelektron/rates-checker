@@ -9,14 +9,14 @@ void UseCase_QuerySettings(int client) {
     Settings_Set(client, CONSOLE_VARIABLE_UPDATE_RATE, CONSOLE_VARIABLE_UNDEFINED);
     Settings_Set(client, CONSOLE_VARIABLE_RATE, CONSOLE_VARIABLE_UNDEFINED);
 
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCase_CheckSettingsCallback);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCaseCallback_QuerySettings);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings);
+    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings);
+    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings);
+    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCaseCallback_QuerySettings);
 }
 
-public void UseCase_CheckSettingsCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
+public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
