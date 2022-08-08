@@ -29,13 +29,16 @@ public Plugin myinfo = {
 public void OnPluginStart() {
     Command_Create();
     Variable_Create();
-    Settings_Create();
     LoadTranslations("rates-checker.phrases");
     AutoExecConfig(true, "rates-checker");
 }
 
-public void OnPluginEnd() {
-    Settings_Destroy();
+public void OnClientConnected(int client) {
+    Settings_Create(client);
+}
+
+public void OnClientDisconnect(int client) {
+    Settings_Destroy(client);
 }
 
 public void OnClientPostAdminCheck(int client) {
