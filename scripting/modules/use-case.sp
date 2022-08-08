@@ -45,32 +45,25 @@ public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVar
 }
 
 public void UseCase_OnSettingsReady(int client, StringMap request) {
-    int requestCode;
+    int requestCode = RequestCode_NotFound;
 
-    if (!request.GetValue(REQUEST_CODE, requestCode)) {
-        UseCase_ThrowErrorFromRequest(REQUEST_CODE);
-    }
+    request.GetValue(REQUEST_CODE, requestCode);
 
     if (requestCode == RequestCode_CheckSettings) {
         UseCase_CheckSettings(client);
     } else if (requestCode == RequestCode_RefreshSettings) {
-        int requestClient;
-        int requestTarget;
+        int requestClient = INVALID_CLIENT;
+        int requestTarget = INVALID_CLIENT;
 
-        if (!request.GetValue(REQUEST_CLIENT, requestClient)) {
-            UseCase_ThrowErrorFromRequest(REQUEST_CLIENT);
+        request.GetValue(REQUEST_CLIENT, requestClient);
+        request.GetValue(REQUEST_TARGET, requestTarget)
+
+        if (requestClient != INVALID_CLIENT && requestTarget != INVALID_CLIENT) {
+            Menu_PlayerRates(requestClient, requestTarget);
         }
-
-        if (!request.GetValue(REQUEST_TARGET, requestTarget)) {
-            UseCase_ThrowErrorFromRequest(REQUEST_TARGET);
-        }
-
-        Menu_PlayerRates(requestClient, requestTarget);
     }
-}
 
-void UseCase_ThrowErrorFromRequest(const char[] requestField) {
-    ThrowError("Request '%s' is not found", requestField);
+    delete request;
 }
 
 bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {

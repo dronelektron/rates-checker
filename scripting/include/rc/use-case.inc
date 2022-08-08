@@ -8,6 +8,7 @@
 #define REQUEST_TARGET "target"
 
 enum {
+    RequestCode_NotFound = -1,
     RequestCode_CheckSettings,
     RequestCode_RefreshSettings
 };
