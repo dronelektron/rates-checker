@@ -99,8 +99,8 @@ void Menu_AddPlayers(Menu menu) {
     char info[USER_ID_MAX_SIZE];
     char item[MAX_NAME_LENGTH];
 
-    for (int i = 1; i < MaxClients; i++) {
-        if (!IsClientInGame(i)) {
+    for (int i = 1; i <= MaxClients; i++) {
+        if (!IsClientInGame(i) || IsFakeClient(i)) {
             continue;
         }
 
