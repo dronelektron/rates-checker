@@ -8,13 +8,14 @@
 #include "rc/console-variable"
 #include "rc/menu"
 #include "rc/message"
+#include "rc/request"
 #include "rc/settings"
-#include "rc/use-case"
 
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"
 #include "modules/menu.sp"
 #include "modules/message.sp"
+#include "modules/request.sp"
 #include "modules/settings.sp"
 #include "modules/use-case.sp"
 

@@ -1,24 +1,18 @@
 static int g_settingsCounter[MAXPLAYERS + 1];
 
 void UseCase_QuerySettingsCheck(int client) {
-    StringMap request = new StringMap();
-
-    request.SetValue(REQUEST_CODE, RequestCode_CheckSettings);
-
-    UseCase_QuerySettings(client, request);
+    UseCase_QuerySettings(client, RequestCode_CheckSettings);
 }
 
 void UseCase_QuerySettingsRefresh(int client, int target) {
-    StringMap request = new StringMap();
+    Request_AddClient(target, client);
 
-    request.SetValue(REQUEST_CODE, RequestCode_RefreshSettings);
-    request.SetValue(REQUEST_CLIENT, client);
-    request.SetValue(REQUEST_TARGET, target);
-
-    UseCase_QuerySettings(target, request);
+    if (Request_GetClientsAmount(target) == 1) {
+        UseCase_QuerySettings(target, RequestCode_RefreshSettings);
+    }
 }
 
-void UseCase_QuerySettings(int client, StringMap request) {
+void UseCase_QuerySettings(int client, int requestCode) {
     g_settingsCounter[client] = 0;
 
     Settings_Set(client, VARIABLE_INTERP, VARIABLE_UNDEFINED);
@@ -27,43 +21,35 @@ void UseCase_QuerySettings(int client, StringMap request) {
     Settings_Set(client, VARIABLE_UPDATE_RATE, VARIABLE_UNDEFINED);
     Settings_Set(client, VARIABLE_RATE, VARIABLE_UNDEFINED);
 
-    QueryClientConVar(client, VARIABLE_INTERP, UseCaseCallback_QuerySettings, request);
-    QueryClientConVar(client, VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings, request);
-    QueryClientConVar(client, VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings, request);
-    QueryClientConVar(client, VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings, request);
-    QueryClientConVar(client, VARIABLE_RATE, UseCaseCallback_QuerySettings, request);
+    QueryClientConVar(client, VARIABLE_INTERP, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_RATE, UseCaseCallback_QuerySettings, requestCode);
 }
 
-public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, StringMap request) {
+public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int requestCode) {
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
 
     if (g_settingsCounter[client] == Settings_Size(client)) {
-        UseCase_OnSettingsReady(client, request);
+        UseCase_OnSettingsReady(client, requestCode);
     }
 }
 
-public void UseCase_OnSettingsReady(int client, StringMap request) {
-    int requestCode = RequestCode_NotFound;
-
-    request.GetValue(REQUEST_CODE, requestCode);
-
+public void UseCase_OnSettingsReady(int target, int requestCode) {
     if (requestCode == RequestCode_CheckSettings) {
-        UseCase_CheckSettings(client);
+        UseCase_CheckSettings(target);
     } else if (requestCode == RequestCode_RefreshSettings) {
-        int requestClient = INVALID_CLIENT;
-        int requestTarget = INVALID_CLIENT;
+        for (int i = 0; i < Request_GetClientsAmount(target); i++) {
+            int client = Request_GetClient(target, i);
 
-        request.GetValue(REQUEST_CLIENT, requestClient);
-        request.GetValue(REQUEST_TARGET, requestTarget)
-
-        if (requestClient != INVALID_CLIENT && requestTarget != INVALID_CLIENT) {
-            Menu_PlayerRates(requestClient, requestTarget);
+            Menu_PlayerRates(client, target);
         }
-    }
 
-    delete request;
+        Request_Reset(target);
+    }
 }
 
 bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {
