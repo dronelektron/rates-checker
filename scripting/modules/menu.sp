@@ -42,11 +42,11 @@ void Menu_PlayerRates(int client, int target) {
 
     menu.SetTitle("%T", PLAYER_RATES, client, target);
 
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_INTERP);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_INTERP_RATIO);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_CMD_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_UPDATE_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP_RATIO);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_CMD_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_UPDATE_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_RATE);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -114,7 +114,7 @@ void Menu_AddPlayers(Menu menu) {
 }
 
 void Menu_AddPlayerRateItem(Menu menu, int client, int target, const char[] consoleVariable) {
-    char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char value[VARIABLE_MAX_SIZE];
     char item[ITEM_MAX_SIZE];
     bool isValid = UseCase_CheckSettingsByName(target, consoleVariable);
 
@@ -125,8 +125,8 @@ void Menu_AddPlayerRateItem(Menu menu, int client, int target, const char[] cons
 }
 
 void Menu_AddServerRateItem(Menu menu, int client, const char[] consoleVariable) {
-    char minValue[CONSOLE_VARIABLE_MAX_SIZE];
-    char maxValue[CONSOLE_VARIABLE_MAX_SIZE];
+    char minValue[VARIABLE_MAX_SIZE];
+    char maxValue[VARIABLE_MAX_SIZE];
     char minItem[ITEM_MAX_SIZE];
     char maxItem[ITEM_MAX_SIZE];
 

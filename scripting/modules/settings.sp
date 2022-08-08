@@ -17,7 +17,7 @@ int Settings_Size(int client) {
 }
 
 void Settings_Get(int client, const char[] consoleVariable, char[] value) {
-    g_settings[client].GetString(consoleVariable, value, CONSOLE_VARIABLE_MAX_SIZE);
+    g_settings[client].GetString(consoleVariable, value, VARIABLE_MAX_SIZE);
 }
 
 void Settings_Set(int client, const char[] consoleVariable, const char[] value) {
