@@ -1,6 +1,24 @@
 static int g_settingsCounter[MAXPLAYERS + 1];
 
-void UseCase_QuerySettings(int client) {
+void UseCase_QuerySettingsCheck(int client) {
+    StringMap request = new StringMap();
+
+    request.SetValue(REQUEST_CODE, RequestCode_CheckSettings);
+
+    UseCase_QuerySettings(client, request);
+}
+
+void UseCase_QuerySettingsRefresh(int client, int target) {
+    StringMap request = new StringMap();
+
+    request.SetValue(REQUEST_CODE, RequestCode_RefreshSettings);
+    request.SetValue(REQUEST_CLIENT, client);
+    request.SetValue(REQUEST_TARGET, target);
+
+    UseCase_QuerySettings(target, request);
+}
+
+void UseCase_QuerySettings(int client, StringMap request) {
     g_settingsCounter[client] = 0;
 
     Settings_Set(client, CONSOLE_VARIABLE_INTERP, CONSOLE_VARIABLE_UNDEFINED);
@@ -9,21 +27,50 @@ void UseCase_QuerySettings(int client) {
     Settings_Set(client, CONSOLE_VARIABLE_UPDATE_RATE, CONSOLE_VARIABLE_UNDEFINED);
     Settings_Set(client, CONSOLE_VARIABLE_RATE, CONSOLE_VARIABLE_UNDEFINED);
 
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCaseCallback_QuerySettings);
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings);
-    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings);
-    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings);
-    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCaseCallback_QuerySettings);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCaseCallback_QuerySettings, request);
+    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings, request);
+    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings, request);
+    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings, request);
+    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCaseCallback_QuerySettings, request);
 }
 
-public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
+public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, StringMap request) {
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
 
     if (g_settingsCounter[client] == Settings_Size(client)) {
-        UseCase_CheckSettings(client);
+        UseCase_OnSettingsReady(client, request);
     }
+}
+
+public void UseCase_OnSettingsReady(int client, StringMap request) {
+    int requestCode;
+
+    if (!request.GetValue(REQUEST_CODE, requestCode)) {
+        UseCase_ThrowErrorFromRequest(REQUEST_CODE);
+    }
+
+    if (requestCode == RequestCode_CheckSettings) {
+        UseCase_CheckSettings(client);
+    } else if (requestCode == RequestCode_RefreshSettings) {
+        int requestClient;
+        int requestTarget;
+
+        if (!request.GetValue(REQUEST_CLIENT, requestClient)) {
+            UseCase_ThrowErrorFromRequest(REQUEST_CLIENT);
+        }
+
+        if (!request.GetValue(REQUEST_TARGET, requestTarget)) {
+            UseCase_ThrowErrorFromRequest(REQUEST_TARGET);
+        }
+
+        Menu_PlayerRates(requestClient, requestTarget);
+    }
+}
+
+void UseCase_ThrowErrorFromRequest(const char[] requestField) {
+    ThrowError("Request '%s' is not found", requestField);
 }
 
 bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {

@@ -9,6 +9,7 @@
 #include "rc/menu"
 #include "rc/message"
 #include "rc/settings"
+#include "rc/use-case"
 
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"
@@ -38,5 +39,5 @@ public void OnPluginEnd() {
 }
 
 public void OnClientPostAdminCheck(int client) {
-    UseCase_QuerySettings(client);
+    UseCase_QuerySettingsCheck(client);
 }

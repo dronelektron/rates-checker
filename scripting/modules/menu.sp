@@ -33,7 +33,7 @@ void Menu_LastPlayerRates(int client) {
         Menu_Players(client);
         MessagePrint_PlayerIsNoLongerAvailable(client);
     } else {
-        Menu_PlayerRates(client, target);
+        UseCase_QuerySettingsRefresh(client, target);
     }
 }
 
