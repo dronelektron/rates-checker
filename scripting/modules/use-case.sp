@@ -5,9 +5,9 @@ void UseCase_QuerySettingsCheck(int client) {
 }
 
 void UseCase_QuerySettingsRefresh(int client, int target) {
-    Request_AddClient(target, client);
+    Request_AddObserver(target, client);
 
-    if (Request_GetClientsAmount(target) == 1) {
+    if (Request_GetObserversAmount(target) == 1) {
         UseCase_QuerySettings(target, RequestCode_RefreshSettings);
     }
 }
@@ -38,17 +38,17 @@ public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVar
     }
 }
 
-public void UseCase_OnSettingsReady(int target, int requestCode) {
+public void UseCase_OnSettingsReady(int client, int requestCode) {
     if (requestCode == RequestCode_CheckSettings) {
-        UseCase_CheckSettings(target);
+        UseCase_CheckSettings(client);
     } else if (requestCode == RequestCode_RefreshSettings) {
-        for (int i = 0; i < Request_GetClientsAmount(target); i++) {
-            int client = Request_GetClient(target, i);
+        for (int i = 0; i < Request_GetObserversAmount(client); i++) {
+            int observer = Request_GetObserver(client, i);
 
-            Menu_PlayerRates(client, target);
+            Menu_PlayerRates(observer, client);
         }
 
-        Request_Reset(target);
+        Request_Reset(client);
     }
 }
 

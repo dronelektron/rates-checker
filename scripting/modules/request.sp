@@ -1,23 +1,23 @@
-static ArrayList g_clients[MAXPLAYERS + 1];
+static ArrayList g_observers[MAXPLAYERS + 1];
 
-void Request_Reset(int target) {
-    delete g_clients[target];
+void Request_Reset(int client) {
+    delete g_observers[client];
 }
 
-int Request_GetClientsAmount(int target) {
-    return g_clients[target].Length;
+int Request_GetObserversAmount(int client) {
+    return g_observers[client].Length;
 }
 
-int Request_GetClient(int target, int index) {
-    return g_clients[target].Get(index);
+int Request_GetObserver(int client, int index) {
+    return g_observers[client].Get(index);
 }
 
-void Request_AddClient(int target, int client) {
-    if (g_clients[target] == null) {
-        g_clients[target] = new ArrayList();
+void Request_AddObserver(int client, int observer) {
+    if (g_observers[client] == null) {
+        g_observers[client] = new ArrayList();
     }
 
-    if (g_clients[target].FindValue(client) == VALUE_NOT_FOUND) {
-        g_clients[target].Push(client);
+    if (g_observers[client].FindValue(observer) == VALUE_NOT_FOUND) {
+        g_observers[client].Push(observer);
     }
 }
