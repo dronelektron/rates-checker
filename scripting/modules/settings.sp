@@ -1,15 +1,11 @@
 static StringMap g_settings[MAXPLAYERS + 1];
 
-void Settings_Create() {
-    for (int i = 1; i <= MaxClients; i++) {
-        g_settings[i] = new StringMap();
-    }
+void Settings_Create(int client) {
+    g_settings[client] = new StringMap();
 }
 
-void Settings_Destroy() {
-    for (int i = 1; i <= MaxClients; i++) {
-        delete g_settings[i];
-    }
+void Settings_Destroy(int client) {
+    delete g_settings[client];
 }
 
 int Settings_Size(int client) {
@@ -17,7 +13,7 @@ int Settings_Size(int client) {
 }
 
 void Settings_Get(int client, const char[] consoleVariable, char[] value) {
-    g_settings[client].GetString(consoleVariable, value, CONSOLE_VARIABLE_MAX_SIZE);
+    g_settings[client].GetString(consoleVariable, value, VARIABLE_MAX_SIZE);
 }
 
 void Settings_Set(int client, const char[] consoleVariable, const char[] value) {

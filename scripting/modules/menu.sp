@@ -29,11 +29,11 @@ void Menu_LastPlayerRates(int client) {
     int userId = g_lastUserId[client];
     int target = GetClientOfUserId(userId);
 
-    if (target == 0) {
+    if (target == INVALID_CLIENT) {
         Menu_Players(client);
         MessagePrint_PlayerIsNoLongerAvailable(client);
     } else {
-        Menu_PlayerRates(client, target);
+        UseCase_QuerySettingsRefresh(client, target);
     }
 }
 
@@ -42,11 +42,11 @@ void Menu_PlayerRates(int client, int target) {
 
     menu.SetTitle("%T", PLAYER_RATES, client, target);
 
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_INTERP);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_INTERP_RATIO);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_CMD_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_UPDATE_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, CONSOLE_VARIABLE_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP_RATIO);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_CMD_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_UPDATE_RATE);
+    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_RATE);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -97,10 +97,10 @@ public int MenuHandler_ServerRates(Menu menu, MenuAction action, int param1, int
 
 void Menu_AddPlayers(Menu menu) {
     char info[USER_ID_MAX_SIZE];
-    char item[PLAYER_NAME_MAX_SIZE];
+    char item[MAX_NAME_LENGTH];
 
-    for (int i = 1; i < MaxClients; i++) {
-        if (!IsClientInGame(i)) {
+    for (int i = 1; i <= MaxClients; i++) {
+        if (!IsClientInGame(i) || IsFakeClient(i)) {
             continue;
         }
 
@@ -114,7 +114,7 @@ void Menu_AddPlayers(Menu menu) {
 }
 
 void Menu_AddPlayerRateItem(Menu menu, int client, int target, const char[] consoleVariable) {
-    char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char value[VARIABLE_MAX_SIZE];
     char item[ITEM_MAX_SIZE];
     bool isValid = UseCase_CheckSettingsByName(target, consoleVariable);
 
@@ -125,13 +125,13 @@ void Menu_AddPlayerRateItem(Menu menu, int client, int target, const char[] cons
 }
 
 void Menu_AddServerRateItem(Menu menu, int client, const char[] consoleVariable) {
-    char minValue[CONSOLE_VARIABLE_MAX_SIZE];
-    char maxValue[CONSOLE_VARIABLE_MAX_SIZE];
+    char minValue[VARIABLE_MAX_SIZE];
+    char maxValue[VARIABLE_MAX_SIZE];
     char minItem[ITEM_MAX_SIZE];
     char maxItem[ITEM_MAX_SIZE];
 
-    Variable_GetByName(consoleVariable, minValue, true);
-    Variable_GetByName(consoleVariable, maxValue, false);
+    Variable_GetByName(consoleVariable, minValue, MIN_VALUE_YES);
+    Variable_GetByName(consoleVariable, maxValue, MIN_VALUE_NO);
     Format(minItem, sizeof(minItem), "%T", MINIMUM, client, minValue);
     Format(maxItem, sizeof(maxItem), "%T", MAXIMUM, client, maxValue);
 

@@ -1,41 +1,67 @@
 static int g_settingsCounter[MAXPLAYERS + 1];
 
-void UseCase_QuerySettings(int client) {
-    g_settingsCounter[client] = 0;
-
-    Settings_Set(client, CONSOLE_VARIABLE_INTERP, CONSOLE_VARIABLE_UNDEFINED);
-    Settings_Set(client, CONSOLE_VARIABLE_INTERP_RATIO, CONSOLE_VARIABLE_UNDEFINED);
-    Settings_Set(client, CONSOLE_VARIABLE_CMD_RATE, CONSOLE_VARIABLE_UNDEFINED);
-    Settings_Set(client, CONSOLE_VARIABLE_UPDATE_RATE, CONSOLE_VARIABLE_UNDEFINED);
-    Settings_Set(client, CONSOLE_VARIABLE_RATE, CONSOLE_VARIABLE_UNDEFINED);
-
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_INTERP_RATIO, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_CMD_RATE, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_UPDATE_RATE, UseCase_CheckSettingsCallback);
-    QueryClientConVar(client, CONSOLE_VARIABLE_RATE, UseCase_CheckSettingsCallback);
+void UseCase_QuerySettingsCheck(int client) {
+    UseCase_QuerySettings(client, RequestCode_CheckSettings);
 }
 
-public void UseCase_CheckSettingsCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
+void UseCase_QuerySettingsRefresh(int client, int target) {
+    Request_AddObserver(target, client);
+
+    if (Request_GetObserversAmount(target) == 1) {
+        UseCase_QuerySettings(target, RequestCode_RefreshSettings);
+    }
+}
+
+void UseCase_QuerySettings(int client, int requestCode) {
+    g_settingsCounter[client] = 0;
+
+    Settings_Set(client, VARIABLE_INTERP, VARIABLE_UNDEFINED);
+    Settings_Set(client, VARIABLE_INTERP_RATIO, VARIABLE_UNDEFINED);
+    Settings_Set(client, VARIABLE_CMD_RATE, VARIABLE_UNDEFINED);
+    Settings_Set(client, VARIABLE_UPDATE_RATE, VARIABLE_UNDEFINED);
+    Settings_Set(client, VARIABLE_RATE, VARIABLE_UNDEFINED);
+
+    QueryClientConVar(client, VARIABLE_INTERP, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_INTERP_RATIO, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_CMD_RATE, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_UPDATE_RATE, UseCaseCallback_QuerySettings, requestCode);
+    QueryClientConVar(client, VARIABLE_RATE, UseCaseCallback_QuerySettings, requestCode);
+}
+
+public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int requestCode) {
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
 
     if (g_settingsCounter[client] == Settings_Size(client)) {
+        UseCase_OnSettingsReady(client, requestCode);
+    }
+}
+
+public void UseCase_OnSettingsReady(int client, int requestCode) {
+    if (requestCode == RequestCode_CheckSettings) {
         UseCase_CheckSettings(client);
+    } else if (requestCode == RequestCode_RefreshSettings) {
+        for (int i = 0; i < Request_GetObserversAmount(client); i++) {
+            int observer = Request_GetObserver(client, i);
+
+            Menu_PlayerRates(observer, client);
+        }
+
+        Request_Reset(client);
     }
 }
 
 bool UseCase_CheckSettingsByName(int client, const char[] consoleVariable) {
-    if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP)) {
+    if (StrEqual(consoleVariable, VARIABLE_INTERP)) {
         return UseCase_IsInterpValid(client);
-    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_INTERP_RATIO)) {
+    } else if (StrEqual(consoleVariable, VARIABLE_INTERP_RATIO)) {
         return UseCase_IsInterpRatioValid(client);
-    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_CMD_RATE)) {
+    } else if (StrEqual(consoleVariable, VARIABLE_CMD_RATE)) {
         return UseCase_IsCmdRateValid(client);
-    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_UPDATE_RATE)) {
+    } else if (StrEqual(consoleVariable, VARIABLE_UPDATE_RATE)) {
         return UseCase_IsUpdateRateValid(client);
-    } else if (StrEqual(consoleVariable, CONSOLE_VARIABLE_RATE)) {
+    } else if (StrEqual(consoleVariable, VARIABLE_RATE)) {
         return UseCase_IsRateValid(client);
     } else {
         ThrowError("Invalid console variable");
@@ -53,7 +79,7 @@ void UseCase_CheckSettings(int client) {
     isValidSettings &= UseCase_IsUpdateRateValid(client);
     isValidSettings &= UseCase_IsRateValid(client);
 
-    if (!isValidSettings && Variable_IsNotificationsEnabled()) {
+    if (!isValidSettings && Variable_Notifications()) {
         for (int i = 1; i <= MaxClients; i++) {
             if (IsClientInGame(i) && UseCase_IsPlayerAdmin(i)) {
                 MessagePrint_PlayerHasBadSettings(client, i);
@@ -63,47 +89,47 @@ void UseCase_CheckSettings(int client) {
 }
 
 bool UseCase_IsInterpValid(int client) {
-    float minValue = Variable_GetMinInterp();
-    float maxValue = Variable_GetMaxInterp();
-    float value = UseCase_GetSettingsFloat(client, CONSOLE_VARIABLE_INTERP);
+    float minValue = Variable_MinInterp();
+    float maxValue = Variable_MaxInterp();
+    float value = UseCase_GetSettingsFloat(client, VARIABLE_INTERP);
 
     return UseCase_InRange(minValue, value, maxValue);
 }
 
 bool UseCase_IsInterpRatioValid(int client) {
-    float minValue = Variable_GetMinInterpRatio();
-    float maxValue = Variable_GetMaxInterpRatio();
-    float value = UseCase_GetSettingsFloat(client, CONSOLE_VARIABLE_INTERP_RATIO);
+    float minValue = Variable_MinInterpRatio();
+    float maxValue = Variable_MaxInterpRatio();
+    float value = UseCase_GetSettingsFloat(client, VARIABLE_INTERP_RATIO);
 
     return UseCase_InRange(minValue, value, maxValue);
 }
 
 bool UseCase_IsCmdRateValid(int client) {
-    int minValue = Variable_GetMinCmdRate();
-    int maxValue = Variable_GetMaxCmdRate();
-    int value = UseCase_GetSettingsInt(client, CONSOLE_VARIABLE_CMD_RATE);
+    int minValue = Variable_MinCmdRate();
+    int maxValue = Variable_MaxCmdRate();
+    int value = UseCase_GetSettingsInt(client, VARIABLE_CMD_RATE);
 
     return UseCase_InRange(minValue, value, maxValue);
 }
 
 bool UseCase_IsUpdateRateValid(int client) {
-    int minValue = Variable_GetMinUpdateRate();
-    int maxValue = Variable_GetMaxUpdateRate();
-    int value = UseCase_GetSettingsInt(client, CONSOLE_VARIABLE_UPDATE_RATE);
+    int minValue = Variable_MinUpdateRate();
+    int maxValue = Variable_MaxUpdateRate();
+    int value = UseCase_GetSettingsInt(client, VARIABLE_UPDATE_RATE);
 
     return UseCase_InRange(minValue, value, maxValue);
 }
 
 bool UseCase_IsRateValid(int client) {
-    int minValue = Variable_GetMinRate();
-    int maxValue = Variable_GetMaxRate();
-    int value = UseCase_GetSettingsInt(client, CONSOLE_VARIABLE_RATE);
+    int minValue = Variable_MinRate();
+    int maxValue = Variable_MaxRate();
+    int value = UseCase_GetSettingsInt(client, VARIABLE_RATE);
 
     return UseCase_InRange(minValue, value, maxValue);
 }
 
 int UseCase_GetSettingsInt(int client, const char[] consoleVariable) {
-    char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char value[VARIABLE_MAX_SIZE];
 
     Settings_Get(client, consoleVariable, value);
 
@@ -111,7 +137,7 @@ int UseCase_GetSettingsInt(int client, const char[] consoleVariable) {
 }
 
 float UseCase_GetSettingsFloat(int client, const char[] consoleVariable) {
-    char value[CONSOLE_VARIABLE_MAX_SIZE];
+    char value[VARIABLE_MAX_SIZE];
 
     Settings_Get(client, consoleVariable, value);
 
