@@ -29,6 +29,10 @@ void UseCase_QuerySettings(int client, int requestCode) {
 }
 
 public void UseCaseCallback_QuerySettings(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int requestCode) {
+    if (!IsClientInGame(client)) {
+        return;
+    }
+
     Settings_Set(client, cvarName, cvarValue);
 
     g_settingsCounter[client]++;
