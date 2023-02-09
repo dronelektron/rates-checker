@@ -65,9 +65,12 @@ public int MenuHandler_Rates(Menu menu, MenuAction action, int param1, int param
         MenuHandler_NextClient(param1);
     } else if (param2 == KEY_BACK) {
         Menu_Players(param1);
-        Sound_MenuItem(param1);
-    } else if (param2 == KEY_EXIT) {
+    }
+
+    if (param2 == KEY_EXIT) {
         Sound_MenuExit(param1);
+    } else {
+        Sound_MenuItem(param1);
     }
 
     return 0;
@@ -91,8 +94,6 @@ void MenuHandler_PreviousClient(int client) {
     } else {
         Settings_Query(client, target);
     }
-
-    Sound_MenuItem(client);
 }
 
 void MenuHandler_NextClient(int client) {
@@ -113,8 +114,6 @@ void MenuHandler_NextClient(int client) {
     } else {
         Settings_Query(client, target);
     }
-
-    Sound_MenuItem(client);
 }
 
 void Menu_AddPlayers(Menu menu) {
