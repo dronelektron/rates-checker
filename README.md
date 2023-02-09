@@ -16,3 +16,7 @@ Allows you to check player rates:
 
 * Download latest [release](https://github.com/dronelektron/rates-checker/releases) (compiled for SourceMod 1.11)
 * Extract "plugins" and "translations" folders to "addons/sourcemod" folder of your server
+
+### Console Commands
+
+* sm_rates - Open menu with player rates

@@ -1,6 +1,6 @@
 int UseCase_FindPreviousClient(int client) {
     for (int i = client - 1; i > 0; i--) {
-        if (UseCase_IsRealClient(i)) {
+        if (UseCase_IsValidClient(i)) {
             return i;
         }
     }
@@ -10,7 +10,7 @@ int UseCase_FindPreviousClient(int client) {
 
 int UseCase_FindNextClient(int client) {
     for (int i = client + 1; i <= MaxClients; i++) {
-        if (UseCase_IsRealClient(i)) {
+        if (UseCase_IsValidClient(i)) {
             return i;
         }
     }
@@ -18,6 +18,6 @@ int UseCase_FindNextClient(int client) {
     return CLIENT_NOT_FOUND;
 }
 
-bool UseCase_IsRealClient(int client) {
-    return IsClientInGame(client) && !IsFakeClient(client);
+bool UseCase_IsValidClient(int client) {
+    return IsClientInGame(client) && !IsFakeClient(client) && !IsClientSourceTV(client);
 }
