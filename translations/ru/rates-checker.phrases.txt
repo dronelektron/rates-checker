@@ -12,7 +12,7 @@
 
     "Player is no longer available"
     {
-        "ru"    "Данный игрок больше не доступен"
+        "ru"    "Выбранный игрок больше не доступен"
     }
 
     "Rates checker"

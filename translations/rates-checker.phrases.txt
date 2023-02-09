@@ -12,7 +12,7 @@
 
     "Player is no longer available"
     {
-        "en"    "This player is no longer available"
+        "en"    "The player you selected is no longer available"
     }
 
     "Rates checker"
