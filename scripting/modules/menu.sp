@@ -74,42 +74,44 @@ public int MenuHandler_Rates(Menu menu, MenuAction action, int param1, int param
 }
 
 void MenuHandler_PreviousClient(int client) {
-    int previousClient = UseCase_FindPreviousClient(client);
+    int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
 
-    if (previousClient == CLIENT_NOT_FOUND) {
+    if (lastTarget == INVALID_CLIENT) {
+        Menu_Players(client);
+        Message_PlayerIsNoLongerAvailable(client);
+
+        return;
+    }
+
+    int target = UseCase_FindPreviousClient(lastTarget);
+
+    if (target == CLIENT_NOT_FOUND) {
+        Menu_Rates(client, lastTarget);
         Message_NoPreviousClient(client);
-
-        int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
-
-        if (lastTarget == INVALID_CLIENT) {
-            Menu_Players(client);
-            Message_PlayerIsNoLongerAvailable(client);
-        } else {
-            Menu_Rates(client, lastTarget);
-        }
     } else {
-        Settings_Query(client, previousClient);
+        Settings_Query(client, target);
     }
 
     Sound_MenuItem(client);
 }
 
 void MenuHandler_NextClient(int client) {
-    int nextClient = UseCase_FindNextClient(client);
+    int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
 
-    if (nextClient == CLIENT_NOT_FOUND) {
+    if (lastTarget == INVALID_CLIENT) {
+        Menu_Players(client);
+        Message_PlayerIsNoLongerAvailable(client);
+
+        return;
+    }
+
+    int target = UseCase_FindNextClient(lastTarget);
+
+    if (target == CLIENT_NOT_FOUND) {
+        Menu_Rates(client, lastTarget);
         Message_NoNextClient(client);
-
-        int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
-
-        if (lastTarget == INVALID_CLIENT) {
-            Menu_Players(client);
-            Message_PlayerIsNoLongerAvailable(client);
-        } else {
-            Menu_Rates(client, lastTarget);
-        }
     } else {
-        Settings_Query(client, nextClient);
+        Settings_Query(client, target);
     }
 
     Sound_MenuItem(client);
