@@ -1,0 +1,47 @@
+"Phrases"
+{
+    "No previous player"
+    {
+        "ru"    "Нет предыдущего игрока"
+    }
+
+    "No next player"
+    {
+        "ru"    "Нет следующего игрока"
+    }
+
+    "Player is no longer available"
+    {
+        "ru"    "Данный игрок больше не доступен"
+    }
+
+    "Rates checker"
+    {
+        "ru"    "Проверка рейтов"
+    }
+
+    "Player rates"
+    {
+        "ru"    "Рейты игрока: {1}"
+    }
+
+    "Previous player"
+    {
+        "ru"    "Предыдущий игрок"
+    }
+
+    "Next player"
+    {
+        "ru"    "Следующий игрок"
+    }
+
+    "Back"
+    {
+        "ru"    "Назад"
+    }
+
+    "Exit"
+    {
+        "ru"    "Выход"
+    }
+}

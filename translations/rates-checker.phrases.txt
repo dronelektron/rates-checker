@@ -1,0 +1,48 @@
+"Phrases"
+{
+    "No previous player"
+    {
+        "en"    "No previous player"
+    }
+
+    "No next player"
+    {
+        "en"    "No next player"
+    }
+
+    "Player is no longer available"
+    {
+        "en"    "This player is no longer available"
+    }
+
+    "Rates checker"
+    {
+        "en"    "Rates checker"
+    }
+
+    "Player rates"
+    {
+        "#format"   "{1:N}"
+        "en"    "Rates of the player: {1}"
+    }
+
+    "Previous player"
+    {
+        "en"    "Previous player"
+    }
+
+    "Next player"
+    {
+        "en"    "Next player"
+    }
+
+    "Back"
+    {
+        "en"    "Back"
+    }
+
+    "Exit"
+    {
+        "en"    "Exit"
+    }
+}
