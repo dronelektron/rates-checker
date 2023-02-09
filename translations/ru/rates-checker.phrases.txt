@@ -1,13 +1,18 @@
 "Phrases"
 {
-    "Player has bad settings"
+    "No previous player"
     {
-        "ru"    "{default}У игрока {green}{1} {default}стоят плохие настройки"
+        "ru"    "Нет предыдущего игрока"
+    }
+
+    "No next player"
+    {
+        "ru"    "Нет следующего игрока"
     }
 
     "Player is no longer available"
     {
-        "ru"    "Игрок больше недоступен"
+        "ru"    "Выбранный игрок больше не доступен"
     }
 
     "Rates checker"
@@ -20,28 +25,23 @@
         "ru"    "Рейты игрока: {1}"
     }
 
-    "Server rates"
+    "Previous player"
     {
-        "ru"    "Рейты сервера: {1}"
+        "ru"    "Предыдущий игрок"
     }
 
-    "Rate value good"
+    "Next player"
     {
-        "ru"    "ОК"
+        "ru"    "Следующий игрок"
     }
 
-    "Rate value bad"
+    "Back"
     {
-        "ru"    "Отклонение"
+        "ru"    "Назад"
     }
 
-    "Minimum"
+    "Exit"
     {
-        "ru"    "Минимум: {1}"
-    }
-
-    "Maximum"
-    {
-        "ru"    "Максимум: {1}"
+        "ru"    "Выход"
     }
 }

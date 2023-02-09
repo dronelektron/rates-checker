@@ -1,7 +1,11 @@
-void MessagePrint_PlayerHasBadSettings(int client, int admin) {
-    CPrintToChat(admin, "%s%t", PREFIX_COLORED, "Player has bad settings", client);
+void Message_NoPreviousClient(int client) {
+    PrintToChat(client, "%s%t", PREFIX, "No previous player");
 }
 
-void MessagePrint_PlayerIsNoLongerAvailable(int client) {
+void Message_NoNextClient(int client) {
+    PrintToChat(client, "%s%t", PREFIX, "No next player");
+}
+
+void Message_PlayerIsNoLongerAvailable(int client) {
     PrintToChat(client, "%s%t", PREFIX, "Player is no longer available");
 }

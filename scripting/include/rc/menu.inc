@@ -3,14 +3,20 @@
 #endif
 #define _rc_menu_included
 
-#define RATES_CHECKER "Rates checker"
-#define PLAYER_RATES "Player rates"
-#define SERVER_RATES "Server rates"
-#define RATE_VALUE_GOOD "Rate value good"
-#define RATE_VALUE_BAD "Rate value bad"
-#define MINIMUM "Minimum"
-#define MAXIMUM "Maximum"
+#define TITLE_SIZE (64 * 4)
 
-#define USER_ID_MAX_SIZE 16
-#define ITEM_MAX_SIZE (32 * 4 + 1)
-#define INVALID_CLIENT 0
+#define INFO_SIZE 16
+#define ITEM_SIZE 32
+
+#define TITLE_RATES_CHECKER "Rates checker"
+#define TITLE_PLAYER_RATES "Player rates"
+
+#define ITEM_PLAYER_PREV "Previous player"
+#define ITEM_PLAYER_NEXT "Next player"
+#define ITEM_BACK "Back"
+#define ITEM_EXIT "Exit"
+
+#define KEY_PLAYER_PREV 7
+#define KEY_PLAYER_NEXT 8
+#define KEY_BACK 9
+#define KEY_EXIT 10

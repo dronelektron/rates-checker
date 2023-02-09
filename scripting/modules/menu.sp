@@ -1,9 +1,9 @@
-static int g_lastUserId[MAXPLAYERS + 1];
+static int g_lastTargetId[MAXPLAYERS + 1];
 
 void Menu_Players(int client) {
     Menu menu = new Menu(MenuHandler_Players);
 
-    menu.SetTitle("%T", RATES_CHECKER, client);
+    menu.SetTitle("%T", TITLE_RATES_CHECKER, client);
 
     Menu_AddPlayers(menu);
 
@@ -12,12 +12,19 @@ void Menu_Players(int client) {
 
 public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_Select) {
-        char info[USER_ID_MAX_SIZE];
+        char info[INFO_SIZE];
 
         menu.GetItem(param2, info, sizeof(info));
-        g_lastUserId[param1] = StringToInt(info);
 
-        Menu_LastPlayerRates(param1);
+        int userId = StringToInt(info);
+        int target = GetClientOfUserId(userId);
+
+        if (target == INVALID_CLIENT) {
+            Menu_Players(param1);
+            Message_PlayerIsNoLongerAvailable(param1);
+        } else {
+            Settings_Query(param1, target);
+        }
     } else if (action == MenuAction_End) {
         delete menu;
     }
@@ -25,116 +32,145 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
     return 0;
 }
 
-void Menu_LastPlayerRates(int client) {
-    int userId = g_lastUserId[client];
-    int target = GetClientOfUserId(userId);
+void Menu_Rates(int client, int target) {
+    Panel panel = new Panel();
 
-    if (target == INVALID_CLIENT) {
-        Menu_Players(client);
-        MessagePrint_PlayerIsNoLongerAvailable(client);
-    } else {
-        UseCase_QuerySettingsRefresh(client, target);
+    Menu_SetTitle(panel, "%T", TITLE_PLAYER_RATES, client, target);
+    Menu_AddSpacer(panel);
+    Menu_AddConsoleVariable(panel, client, CVAR_CL_INTERP);
+    Menu_AddConsoleVariable(panel, client, CVAR_CL_INTERP_RATIO);
+    Menu_AddConsoleVariable(panel, client, CVAR_CL_CMD_RATE);
+    Menu_AddConsoleVariable(panel, client, CVAR_CL_UPDATE_RATE);
+    Menu_AddConsoleVariable(panel, client, CVAR_RATE);
+    Menu_AddSpacer(panel);
+    Menu_AddNavigation(panel, client);
+    Menu_AddSpacer(panel);
+    Menu_AddBackButton(panel, client);
+    Menu_AddExitButton(panel, client);
+
+    g_lastTargetId[client] = GetClientUserId(target);
+    panel.Send(client, MenuHandler_Rates, MENU_TIME_FOREVER);
+
+    delete panel;
+}
+
+public int MenuHandler_Rates(Menu menu, MenuAction action, int param1, int param2) {
+    if (action != MenuAction_Select) {
+        return 0;
     }
-}
 
-void Menu_PlayerRates(int client, int target) {
-    Menu menu = new Menu(MenuHandler_PlayerRates);
-
-    menu.SetTitle("%T", PLAYER_RATES, client, target);
-
-    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP);
-    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_INTERP_RATIO);
-    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_CMD_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_UPDATE_RATE);
-    Menu_AddPlayerRateItem(menu, client, target, VARIABLE_RATE);
-
-    menu.ExitBackButton = true;
-    menu.Display(client, MENU_TIME_FOREVER);
-}
-
-public int MenuHandler_PlayerRates(Menu menu, MenuAction action, int param1, int param2) {
-    if (action == MenuAction_Select) {
-        char info[USER_ID_MAX_SIZE];
-
-        menu.GetItem(param2, info, sizeof(info));
-
-        Menu_ServerRates(param1, info);
-    } else if (action == MenuAction_Cancel && param2 == MenuCancel_ExitBack) {
+    if (param2 == KEY_PLAYER_PREV) {
+        MenuHandler_PreviousClient(param1);
+    } else if (param2 == KEY_PLAYER_NEXT) {
+        MenuHandler_NextClient(param1);
+    } else if (param2 == KEY_BACK) {
         Menu_Players(param1);
-    } else if (action == MenuAction_End) {
-        delete menu;
+    }
+
+    if (param2 == KEY_EXIT) {
+        Sound_MenuExit(param1);
+    } else {
+        Sound_MenuItem(param1);
     }
 
     return 0;
 }
 
-void Menu_ServerRates(int client, const char[] consoleVariable) {
-    Menu menu = new Menu(MenuHandler_ServerRates);
+void MenuHandler_PreviousClient(int client) {
+    int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
 
-    menu.SetTitle("%T", SERVER_RATES, client, consoleVariable);
+    if (lastTarget == INVALID_CLIENT) {
+        Menu_Players(client);
+        Message_PlayerIsNoLongerAvailable(client);
 
-    Menu_AddServerRateItem(menu, client, consoleVariable);
-
-    menu.ExitBackButton = true;
-    menu.Display(client, MENU_TIME_FOREVER);
-}
-
-public int MenuHandler_ServerRates(Menu menu, MenuAction action, int param1, int param2) {
-    if (action == MenuAction_Select) {
-        char info[USER_ID_MAX_SIZE];
-
-        menu.GetItem(param2, info, sizeof(info));
-
-        Menu_ServerRates(param1, info);
-    } else if (action == MenuAction_Cancel && param2 == MenuCancel_ExitBack) {
-        Menu_LastPlayerRates(param1);
-    } else if (action == MenuAction_End) {
-        delete menu;
+        return;
     }
 
-    return 0;
+    int target = UseCase_FindPreviousClient(lastTarget);
+
+    if (target == CLIENT_NOT_FOUND) {
+        Menu_Rates(client, lastTarget);
+        Message_NoPreviousClient(client);
+    } else {
+        Settings_Query(client, target);
+    }
+}
+
+void MenuHandler_NextClient(int client) {
+    int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
+
+    if (lastTarget == INVALID_CLIENT) {
+        Menu_Players(client);
+        Message_PlayerIsNoLongerAvailable(client);
+
+        return;
+    }
+
+    int target = UseCase_FindNextClient(lastTarget);
+
+    if (target == CLIENT_NOT_FOUND) {
+        Menu_Rates(client, lastTarget);
+        Message_NoNextClient(client);
+    } else {
+        Settings_Query(client, target);
+    }
 }
 
 void Menu_AddPlayers(Menu menu) {
-    char info[USER_ID_MAX_SIZE];
-    char item[MAX_NAME_LENGTH];
+    for (int client = 1; client <= MaxClients; client++) {
+        if (IsClientInGame(client)) {
+            int userId = GetClientUserId(client);
+            char info[INFO_SIZE];
+            char item[MAX_NAME_LENGTH];
 
-    for (int i = 1; i <= MaxClients; i++) {
-        if (!IsClientInGame(i) || IsFakeClient(i)) {
-            continue;
+            IntToString(userId, info, sizeof(info));
+            Format(item, sizeof(item), "%N", client);
+
+            menu.AddItem(info, item);
         }
-
-        int userId = GetClientUserId(i);
-
-        IntToString(userId, info, sizeof(info));
-        GetClientName(i, item, sizeof(item));
-
-        menu.AddItem(info, item);
     }
 }
 
-void Menu_AddPlayerRateItem(Menu menu, int client, int target, const char[] consoleVariable) {
-    char value[VARIABLE_MAX_SIZE];
-    char item[ITEM_MAX_SIZE];
-    bool isValid = UseCase_CheckSettingsByName(target, consoleVariable);
+void Menu_SetTitle(Panel panel, const char[] format, any ...) {
+    char title[TITLE_SIZE];
 
-    Settings_Get(target, consoleVariable, value);
-    Format(item, sizeof(item), "%s %s [ %T ]", consoleVariable, value, isValid ? RATE_VALUE_GOOD : RATE_VALUE_BAD, client);
+    VFormat(title, sizeof(title), format, 3);
 
-    menu.AddItem(consoleVariable, item);
+    panel.SetTitle(title);
 }
 
-void Menu_AddServerRateItem(Menu menu, int client, const char[] consoleVariable) {
-    char minValue[VARIABLE_MAX_SIZE];
-    char maxValue[VARIABLE_MAX_SIZE];
-    char minItem[ITEM_MAX_SIZE];
-    char maxItem[ITEM_MAX_SIZE];
+void Menu_AddConsoleVariable(Panel panel, int client, const char[] cvarName) {
+    char item[ITEM_SIZE];
+    char cvarValue[CVAR_VALUE_SIZE];
 
-    Variable_GetByName(consoleVariable, minValue, MIN_VALUE_YES);
-    Variable_GetByName(consoleVariable, maxValue, MIN_VALUE_NO);
-    Format(minItem, sizeof(minItem), "%T", MINIMUM, client, minValue);
-    Format(maxItem, sizeof(maxItem), "%T", MAXIMUM, client, maxValue);
+    Settings_Get(client, cvarName, cvarValue);
+    Format(item, sizeof(item), "%s \"%s\"", cvarName, cvarValue);
 
-    menu.AddItem(consoleVariable, minItem);
-    menu.AddItem(consoleVariable, maxItem);
+    panel.DrawText(item);
+}
+
+void Menu_AddSpacer(Panel panel) {
+    panel.DrawText(" ");
+}
+
+void Menu_AddNavigation(Panel panel, int client) {
+    Menu_AddItem(panel, KEY_PLAYER_PREV, "%T", ITEM_PLAYER_PREV, client);
+    Menu_AddItem(panel, KEY_PLAYER_NEXT, "%T", ITEM_PLAYER_NEXT, client);
+}
+
+void Menu_AddBackButton(Panel panel, int client) {
+    Menu_AddItem(panel, KEY_BACK, "%T", ITEM_BACK, client);
+}
+
+void Menu_AddExitButton(Panel panel, int client) {
+    Menu_AddItem(panel, KEY_EXIT, "%T", ITEM_EXIT, client);
+}
+
+void Menu_AddItem(Panel panel, int key, const char[] format, any ...) {
+    char item[ITEM_SIZE];
+
+    VFormat(item, sizeof(item), format, 4);
+
+    panel.CurrentKey = key;
+    panel.DrawItem(item);
 }

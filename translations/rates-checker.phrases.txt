@@ -1,14 +1,18 @@
- "Phrases"
+"Phrases"
 {
-    "Player has bad settings"
+    "No previous player"
     {
-        "#format"   "{1:N}"
-        "en"    "{default}Player {green}{1} {default}has bad settings"
+        "en"    "No previous player"
+    }
+
+    "No next player"
+    {
+        "en"    "No next player"
     }
 
     "Player is no longer available"
     {
-        "en"    "Player is no longer available"
+        "en"    "The player you selected is no longer available"
     }
 
     "Rates checker"
@@ -22,31 +26,23 @@
         "en"    "Rates of the player: {1}"
     }
 
-    "Server rates"
+    "Previous player"
     {
-        "#format"   "{1:s}"
-        "en"    "Rates of the server: {1}"
+        "en"    "Previous player"
     }
 
-    "Rate value good"
+    "Next player"
     {
-        "en"    "OK"
+        "en"    "Next player"
     }
 
-    "Rate value bad"
+    "Back"
     {
-        "en"    "Bad"
+        "en"    "Back"
     }
 
-    "Minimum"
+    "Exit"
     {
-        "#format"   "{1:s}"
-        "en"    "Minimum: {1}"
-    }
-
-    "Maximum"
-    {
-        "#format"   "{1:s}"
-        "en"    "Maximum: {1}"
+        "en"    "Exit"
     }
 }
