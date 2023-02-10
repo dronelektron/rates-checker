@@ -24,6 +24,7 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     Command_Create();
+    LoadTranslations("common.phrases");
     LoadTranslations("rates-checker.phrases");
 }
 
