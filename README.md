@@ -19,4 +19,4 @@ Allows you to check player rates:
 
 ### Console Commands
 
-* sm_rates - Open menu with player rates
+* sm_rates [#userid|name] - Open menu with all players or specified

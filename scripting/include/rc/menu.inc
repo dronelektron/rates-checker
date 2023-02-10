@@ -6,7 +6,7 @@
 #define TITLE_SIZE (64 * 4)
 
 #define INFO_SIZE 16
-#define ITEM_SIZE 32
+#define ITEM_SIZE (32 * 4)
 
 #define TITLE_RATES_CHECKER "Rates checker"
 #define TITLE_PLAYER_RATES "Player rates"
@@ -20,3 +20,8 @@
 #define KEY_PLAYER_NEXT 8
 #define KEY_BACK 9
 #define KEY_EXIT 10
+
+enum MenuPage {
+    MenuPage_Previous,
+    MenuPage_Next
+};

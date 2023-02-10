@@ -3,7 +3,19 @@ void Command_Create() {
 }
 
 public Action Command_Rates(int client, int args) {
-    Menu_Players(client);
+    if (args < 1) {
+        Menu_Players(client);
+    } else {
+        char name[MAX_NAME_LENGTH];
+
+        GetCmdArg(1, name, sizeof(name));
+
+        int target = FindTarget(client, name);
+
+        if (target != CLIENT_NOT_FOUND) {
+            Menu_Rates(client, target);
+        }
+    }
 
     return Plugin_Handled;
 }

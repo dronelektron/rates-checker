@@ -60,9 +60,9 @@ public int MenuHandler_Rates(Menu menu, MenuAction action, int param1, int param
     }
 
     if (param2 == KEY_PLAYER_PREV) {
-        MenuHandler_PreviousClient(param1);
+        MenuHandler_SelectPage(param1, MenuPage_Previous);
     } else if (param2 == KEY_PLAYER_NEXT) {
-        MenuHandler_NextClient(param1);
+        MenuHandler_SelectPage(param1, MenuPage_Next);
     } else if (param2 == KEY_BACK) {
         Menu_Players(param1);
     }
@@ -76,7 +76,7 @@ public int MenuHandler_Rates(Menu menu, MenuAction action, int param1, int param
     return 0;
 }
 
-void MenuHandler_PreviousClient(int client) {
+void MenuHandler_SelectPage(int client, MenuPage page) {
     int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
 
     if (lastTarget == INVALID_CLIENT) {
@@ -86,31 +86,22 @@ void MenuHandler_PreviousClient(int client) {
         return;
     }
 
-    int target = UseCase_FindPreviousClient(lastTarget);
+    int target;
 
-    if (target == CLIENT_NOT_FOUND) {
-        Menu_Rates(client, lastTarget);
-        Message_NoPreviousClient(client);
+    if (page == MenuPage_Previous) {
+        target = UseCase_FindPreviousClient(lastTarget);
     } else {
-        Settings_Query(client, target);
+        target = UseCase_FindNextClient(lastTarget);
     }
-}
-
-void MenuHandler_NextClient(int client) {
-    int lastTarget = GetClientOfUserId(g_lastTargetId[client]);
-
-    if (lastTarget == INVALID_CLIENT) {
-        Menu_Players(client);
-        Message_PlayerIsNoLongerAvailable(client);
-
-        return;
-    }
-
-    int target = UseCase_FindNextClient(lastTarget);
 
     if (target == CLIENT_NOT_FOUND) {
         Menu_Rates(client, lastTarget);
-        Message_NoNextClient(client);
+
+        if (page == MenuPage_Previous) {
+            Message_NoPreviousClient(client);
+        } else {
+            Message_NoNextClient(client);
+        }
     } else {
         Settings_Query(client, target);
     }
