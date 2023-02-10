@@ -6,7 +6,7 @@
 #define TITLE_SIZE (64 * 4)
 
 #define INFO_SIZE 16
-#define ITEM_SIZE 32
+#define ITEM_SIZE (32 * 4)
 
 #define TITLE_RATES_CHECKER "Rates checker"
 #define TITLE_PLAYER_RATES "Player rates"
