@@ -20,3 +20,8 @@
 #define KEY_PLAYER_NEXT 8
 #define KEY_BACK 9
 #define KEY_EXIT 10
+
+enum MenuPage {
+    MenuPage_Previous,
+    MenuPage_Next
+};
