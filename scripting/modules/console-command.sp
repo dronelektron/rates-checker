@@ -13,7 +13,7 @@ public Action Command_Rates(int client, int args) {
         int target = FindTarget(client, name);
 
         if (target != CLIENT_NOT_FOUND) {
-            Menu_Rates(client, target);
+            Settings_Query(client, target);
         }
     }
 
