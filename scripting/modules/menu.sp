@@ -23,7 +23,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             Menu_Players(param1);
             Message_PlayerIsNoLongerAvailable(param1);
         } else {
-            Settings_Query(param1, target);
+            Settings_Query(param1, target, QueryType_Menu);
         }
     } else if (action == MenuAction_End) {
         delete menu;
@@ -103,7 +103,7 @@ void MenuHandler_SelectPage(int client, MenuPage page) {
             Message_NoNextClient(client);
         }
     } else {
-        Settings_Query(client, target);
+        Settings_Query(client, target, QueryType_Menu);
     }
 }
 

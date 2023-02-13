@@ -8,6 +8,7 @@ static char g_cvarNames[][] = {
 
 static StringMap g_settings[MAXPLAYERS + 1];
 static int g_settingsCounter[MAXPLAYERS + 1];
+static QueryType g_queryType[MAXPLAYERS + 1];
 
 void Settings_Create(int client) {
     g_settings[client] = new StringMap();
@@ -29,10 +30,11 @@ void Settings_Set(int client, const char[] cvarName, const char[] cvarValue) {
     g_settings[client].SetString(cvarName, cvarValue);
 }
 
-void Settings_Query(int client, int target) {
+void Settings_Query(int client, int target, QueryType queryType) {
     int clientId = GetClientUserId(client);
 
     g_settingsCounter[client] = 0;
+    g_queryType[client] = queryType;
 
     for (int i = 0; i < Settings_Size(); i++) {
         Settings_Set(client, g_cvarNames[i], CVAR_VALUE_EMPTY);
@@ -56,6 +58,6 @@ void Settings_Result(QueryCookie cookie, int target, ConVarQueryResult result, c
     g_settingsCounter[client]++;
 
     if (g_settingsCounter[client] == Settings_Size()) {
-        Menu_Rates(client, target);
+        UseCase_OnSettingsReady(client, target, g_queryType[client]);
     }
 }

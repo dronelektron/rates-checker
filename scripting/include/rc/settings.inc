@@ -11,3 +11,8 @@
 #define CVAR_CL_CMD_RATE "cl_cmdrate"
 #define CVAR_CL_UPDATE_RATE "cl_updaterate"
 #define CVAR_RATE "rate"
+
+enum QueryType {
+    QueryType_Menu,
+    QueryType_Validation
+};
