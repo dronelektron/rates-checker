@@ -1,6 +1,6 @@
-void UseCase_OnSettingsReady(int client, int target, QueryType queryType) {
+void UseCase_OnSettingsReady(int client, int target, QueryType queryType, StringMap settings) {
     if (queryType == QueryType_Menu) {
-        Menu_Rates(client, target);
+        Menu_Rates(client, target, settings);
     }
 }
 

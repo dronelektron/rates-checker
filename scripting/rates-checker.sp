@@ -1,12 +1,14 @@
 #include <sourcemod>
 #include <sdktools>
 
+#include "rc/bundle"
 #include "rc/menu"
 #include "rc/message"
 #include "rc/settings"
 #include "rc/sound"
 #include "rc/use-case"
 
+#include "modules/bundle.sp"
 #include "modules/console-command.sp"
 #include "modules/menu.sp"
 #include "modules/message.sp"
@@ -30,12 +32,4 @@ public void OnPluginStart() {
 
 public void OnMapStart() {
     Sound_Precache();
-}
-
-public void OnClientConnected(int client) {
-    Settings_Create(client);
-}
-
-public void OnClientDisconnect(int client) {
-    Settings_Destroy(client);
 }

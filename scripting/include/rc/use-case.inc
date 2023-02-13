@@ -6,3 +6,4 @@
 #define PRELOAD_YES true
 #define CLIENT_NOT_FOUND -1
 #define INVALID_CLIENT 0
+#define CONSOLE 0
