@@ -7,6 +7,10 @@ void UseCase_CheckSettings(int client) {
 }
 
 void UseCase_OnCheckSettings(int client, StringMap settings) {
+    if (Variable_ValidationMode() == VALIDATION_MODE_NONE) {
+        return;
+    }
+
     char cvarName[CVAR_NAME_SIZE];
     char cvarValue[CVAR_VALUE_SIZE];
 

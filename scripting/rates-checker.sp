@@ -12,6 +12,7 @@
 
 #include "modules/bundle.sp"
 #include "modules/console-command.sp"
+#include "modules/console-variable.sp"
 #include "modules/menu.sp"
 #include "modules/message.sp"
 #include "modules/settings.sp"
@@ -29,6 +30,7 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     Command_Create();
+    Variable_Create();
     Validator_Create();
     LoadTranslations("common.phrases");
     LoadTranslations("rates-checker.phrases");
