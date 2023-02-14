@@ -15,6 +15,18 @@
         "en"    "The player you selected is no longer available"
     }
 
+    "Not integer value"
+    {
+        "#format"   "{1:s},{2:s}"
+        "en"    "Not an integer value type.\nConsole variable {1} equals to \"{2}\"\nValue must contain only digits"
+    }
+
+    "Not float value"
+    {
+        "#format"   "{1:s},{2:s}"
+        "en"    "Not a float value type.\nConsole variable {1} equals to \"{2}\"\nThe value must contain only digits, integer and/or fractional parts"
+    }
+
     "Rates checker"
     {
         "en"    "Rates checker"

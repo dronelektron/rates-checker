@@ -1,7 +1,44 @@
-void UseCase_OnSettingsReady(int client, int target, QueryType queryType, StringMap settings) {
-    if (queryType == QueryType_Menu) {
-        Menu_Rates(client, target, settings);
+void UseCase_CheckSettings(int client, StringMap settings) {
+    char cvarName[CVAR_NAME_SIZE];
+    char cvarValue[CVAR_VALUE_SIZE];
+
+    for (int i = 0; i < Settings_Size(); i++) {
+        Settings_GetCvarName(i, cvarName);
+        Settings_Get(settings, cvarName, cvarValue);
+
+        ValueType valueType = Settings_GetValueType(i);
+        bool isValid;
+
+        if (valueType == ValueType_Int) {
+            isValid = UseCase_CheckInteger(client, cvarName, cvarValue);
+        } else {
+            isValid = UseCase_CheckFloat(client, cvarName, cvarValue);
+        }
+
+        if (!isValid) {
+            break;
+        }
     }
+}
+
+bool UseCase_CheckInteger(int client, const char[] cvarName, const char[] cvarValue) {
+    if (!Validator_IsInt(cvarValue)) {
+        KickClient(client, "%t", "Not integer value", cvarName, cvarValue);
+
+        return false;
+    }
+
+    return true;
+}
+
+bool UseCase_CheckFloat(int client, const char[] cvarName, const char[] cvarValue) {
+    if (!Validator_IsFloat(cvarValue)) {
+        KickClient(client, "%t", "Not float value", cvarName, cvarValue);
+
+        return false;
+    }
+
+    return true;
 }
 
 int UseCase_FindPreviousClient(int client) {

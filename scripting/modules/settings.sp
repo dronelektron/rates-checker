@@ -6,8 +6,20 @@ static char g_cvarNames[][] = {
     "rate"
 };
 
+static ValueType g_valueType[] = {
+    ValueType_Float,
+    ValueType_Float,
+    ValueType_Float,
+    ValueType_Int,
+    ValueType_Int
+};
+
 void Settings_GetCvarName(int index, char[] cvarName) {
     strcopy(cvarName, CVAR_NAME_SIZE, g_cvarNames[index]);
+}
+
+ValueType Settings_GetValueType(int index) {
+    return g_valueType[index];
 }
 
 void Settings_Get(StringMap settings, const char[] cvarName, char[] cvarValue) {
@@ -46,22 +58,17 @@ void Settings_UnpackBundle(StringMap bundle, int target) {
         return;
     }
 
-    int client;
-
-    if (Bundle_IsQueryFromConsole(bundle)) {
-        client = CONSOLE;
-    } else {
-        int clientId = Bundle_GetClientId(bundle);
-
-        client = GetClientOfUserId(clientId);
-
-        if (client == INVALID_CLIENT) {
-            return;
-        }
-    }
-
     QueryType queryType = Bundle_GetQueryType(bundle);
     StringMap settings = Bundle_GetSettings(bundle);
 
-    UseCase_OnSettingsReady(client, target, queryType, settings);
+    if (queryType == QueryType_Menu) {
+        int clientId = Bundle_GetClientId(bundle);
+        int client = GetClientOfUserId(clientId);
+
+        if (client != INVALID_CLIENT) {
+            Menu_Rates(client, target, settings);
+        }
+    } else {
+        UseCase_CheckSettings(target, settings);
+    }
 }

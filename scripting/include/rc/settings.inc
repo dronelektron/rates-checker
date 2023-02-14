@@ -10,3 +10,8 @@ enum QueryType {
     QueryType_Menu,
     QueryType_Validation
 };
+
+enum ValueType {
+    ValueType_Int,
+    ValueType_Float
+};

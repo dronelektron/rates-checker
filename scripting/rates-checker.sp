@@ -1,5 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
+#include <regex>
 
 #include "rc/bundle"
 #include "rc/menu"
@@ -7,6 +8,7 @@
 #include "rc/settings"
 #include "rc/sound"
 #include "rc/use-case"
+#include "rc/validator"
 
 #include "modules/bundle.sp"
 #include "modules/console-command.sp"
@@ -15,6 +17,7 @@
 #include "modules/settings.sp"
 #include "modules/sound.sp"
 #include "modules/use-case.sp"
+#include "modules/validator.sp"
 
 public Plugin myinfo = {
     name = "Rates checker",
@@ -26,10 +29,20 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     Command_Create();
+    Validator_Create();
     LoadTranslations("common.phrases");
     LoadTranslations("rates-checker.phrases");
 }
 
+public void OnPluginEnd() {
+    Validator_Destroy();
+}
+
 public void OnMapStart() {
     Sound_Precache();
+}
+
+public void OnClientPostAdminCheck(int client) {
+    // TODO: Remove CONSOLE
+    Settings_Query(CONSOLE, client, QueryType_Validation);
 }

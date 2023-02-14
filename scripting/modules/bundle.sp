@@ -2,7 +2,7 @@ StringMap Bundle_Create(int client, QueryType queryType) {
     StringMap bundle = new StringMap();
     StringMap settings = new StringMap();
 
-    if (client != CONSOLE) {
+    if (queryType == QueryType_Menu) {
         int clientId = GetClientUserId(client);
 
         bundle.SetValue(BUNDLE_KEY_CLIENT_ID, clientId);
@@ -21,10 +21,6 @@ void Bundle_Destroy(StringMap bundle) {
 
     CloseHandle(settings);
     CloseHandle(bundle);
-}
-
-bool Bundle_IsQueryFromConsole(StringMap bundle) {
-    return !bundle.ContainsKey(BUNDLE_KEY_CLIENT_ID);
 }
 
 int Bundle_GetClientId(StringMap bundle) {
