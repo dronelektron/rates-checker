@@ -6,5 +6,3 @@
 #define PRELOAD_YES true
 #define CLIENT_NOT_FOUND -1
 #define INVALID_CLIENT 0
-// TODO: Remove CONSOLE
-#define CONSOLE 0

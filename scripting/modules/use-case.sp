@@ -1,4 +1,12 @@
-void UseCase_CheckSettings(int client, StringMap settings) {
+void UseCase_OpenSettingsMenu(int client, int target) {
+    Settings_QueryForClient(client, target, QueryType_Menu);
+}
+
+void UseCase_CheckSettings(int client) {
+    Settings_QueryForServer(client, QueryType_Validation);
+}
+
+void UseCase_OnCheckSettings(int client, StringMap settings) {
     char cvarName[CVAR_NAME_SIZE];
     char cvarValue[CVAR_VALUE_SIZE];
 

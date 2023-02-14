@@ -23,7 +23,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             Menu_Players(param1);
             Message_PlayerIsNoLongerAvailable(param1);
         } else {
-            Settings_Query(param1, target, QueryType_Menu);
+            UseCase_OpenSettingsMenu(param1, target);
         }
     } else if (action == MenuAction_End) {
         delete menu;
@@ -91,7 +91,7 @@ void MenuHandler_SelectPage(int client, MenuPage page) {
     }
 
     if (target == CLIENT_NOT_FOUND) {
-        Settings_Query(client, lastTarget, QueryType_Menu);
+        UseCase_OpenSettingsMenu(client, lastTarget);
 
         if (page == MenuPage_Previous) {
             Message_NoPreviousClient(client);
@@ -99,7 +99,7 @@ void MenuHandler_SelectPage(int client, MenuPage page) {
             Message_NoNextClient(client);
         }
     } else {
-        Settings_Query(client, target, QueryType_Menu);
+        UseCase_OpenSettingsMenu(client, target);
     }
 }
 

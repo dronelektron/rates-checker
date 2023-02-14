@@ -30,9 +30,19 @@ int Settings_Size() {
     return sizeof(g_cvarNames);
 }
 
-void Settings_Query(int client, int target, QueryType queryType) {
-    StringMap bundle = Bundle_Create(client, queryType);
+void Settings_QueryForClient(int client, int target, QueryType queryType) {
+    StringMap bundle = Bundle_CreateForClient(client, queryType);
 
+    Settings_Query(target, bundle);
+}
+
+void Settings_QueryForServer(int target, QueryType queryType) {
+    StringMap bundle = Bundle_CreateForServer(queryType);
+
+    Settings_Query(target, bundle);
+}
+
+void Settings_Query(int target, StringMap bundle) {
     for (int i = 0; i < Settings_Size(); i++) {
         QueryClientConVar(target, g_cvarNames[i], Settings_Result, bundle);
     }
@@ -69,6 +79,6 @@ void Settings_UnpackBundle(StringMap bundle, int target) {
             Menu_Rates(client, target, settings);
         }
     } else {
-        UseCase_CheckSettings(target, settings);
+        UseCase_OnCheckSettings(target, settings);
     }
 }

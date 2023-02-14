@@ -1,12 +1,15 @@
-StringMap Bundle_Create(int client, QueryType queryType) {
+StringMap Bundle_CreateForClient(int client, QueryType queryType) {
+    StringMap bundle = Bundle_CreateForServer(queryType);
+    int clientId = GetClientUserId(client);
+
+    bundle.SetValue(BUNDLE_KEY_CLIENT_ID, clientId);
+
+    return bundle;
+}
+
+StringMap Bundle_CreateForServer(QueryType queryType) {
     StringMap bundle = new StringMap();
     StringMap settings = new StringMap();
-
-    if (queryType == QueryType_Menu) {
-        int clientId = GetClientUserId(client);
-
-        bundle.SetValue(BUNDLE_KEY_CLIENT_ID, clientId);
-    }
 
     bundle.SetValue(BUNDLE_KEY_QUERY_TYPE, queryType);
     bundle.SetValue(BUNDLE_KEY_SETTINGS, settings);

@@ -43,6 +43,5 @@ public void OnMapStart() {
 }
 
 public void OnClientPostAdminCheck(int client) {
-    // TODO: Remove CONSOLE
-    Settings_Query(CONSOLE, client, QueryType_Validation);
+    UseCase_CheckSettings(client);
 }
