@@ -9,7 +9,7 @@ static char g_cvarNames[][] = {
 static ValueType g_valueType[] = {
     ValueType_Float,
     ValueType_Float,
-    ValueType_Float,
+    ValueType_Float, // Should be "Int", but Source Engine considers it as "Float", weird...
     ValueType_Int,
     ValueType_Int
 };
