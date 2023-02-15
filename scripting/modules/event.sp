@@ -3,12 +3,11 @@ void Event_Create() {
 }
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {
-    if (!Variable_CheckOnSpawn()) {
-        return;
-    }
-
     int userId = event.GetInt("userid");
     int client = GetClientOfUserId(userId);
+    int inAliveTeam = GetClientTeam(client) > TEAM_SPECTATOR;
 
-    UseCase_CheckSettings(client);
+    if (inAliveTeam && Variable_CheckOnSpawn()) {
+        UseCase_CheckSettings(client);
+    }
 }
