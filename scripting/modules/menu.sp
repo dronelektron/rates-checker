@@ -23,7 +23,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             Menu_Players(param1);
             Message_PlayerIsNoLongerAvailable(param1);
         } else {
-            Settings_Query(param1, target);
+            UseCase_OpenSettingsMenu(param1, target);
         }
     } else if (action == MenuAction_End) {
         delete menu;
@@ -32,16 +32,12 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
     return 0;
 }
 
-void Menu_Rates(int client, int target) {
+void Menu_Rates(int client, int target, StringMap settings) {
     Panel panel = new Panel();
 
     Menu_SetTitle(panel, "%T", TITLE_PLAYER_RATES, client, target);
     Menu_AddSpacer(panel);
-    Menu_AddConsoleVariable(panel, client, CVAR_CL_INTERP);
-    Menu_AddConsoleVariable(panel, client, CVAR_CL_INTERP_RATIO);
-    Menu_AddConsoleVariable(panel, client, CVAR_CL_CMD_RATE);
-    Menu_AddConsoleVariable(panel, client, CVAR_CL_UPDATE_RATE);
-    Menu_AddConsoleVariable(panel, client, CVAR_RATE);
+    Menu_AddCvars(panel, settings);
     Menu_AddSpacer(panel);
     Menu_AddNavigation(panel, client);
     Menu_AddSpacer(panel);
@@ -95,7 +91,7 @@ void MenuHandler_SelectPage(int client, MenuPage page) {
     }
 
     if (target == CLIENT_NOT_FOUND) {
-        Menu_Rates(client, lastTarget);
+        UseCase_OpenSettingsMenu(client, lastTarget);
 
         if (page == MenuPage_Previous) {
             Message_NoPreviousClient(client);
@@ -103,7 +99,7 @@ void MenuHandler_SelectPage(int client, MenuPage page) {
             Message_NoNextClient(client);
         }
     } else {
-        Settings_Query(client, target);
+        UseCase_OpenSettingsMenu(client, target);
     }
 }
 
@@ -130,11 +126,20 @@ void Menu_SetTitle(Panel panel, const char[] format, any ...) {
     panel.SetTitle(title);
 }
 
-void Menu_AddConsoleVariable(Panel panel, int client, const char[] cvarName) {
+void Menu_AddCvars(Panel panel, StringMap settings) {
+    char cvarName[CVAR_NAME_SIZE];
+
+    for (int i = 0; i < Settings_Size(); i++) {
+        Settings_GetCvarName(i, cvarName);
+        Menu_AddCvar(panel, settings, cvarName);
+    }
+}
+
+void Menu_AddCvar(Panel panel, StringMap settings, const char[] cvarName) {
     char item[ITEM_SIZE];
     char cvarValue[CVAR_VALUE_SIZE];
 
-    Settings_Get(client, cvarName, cvarValue);
+    Settings_Get(settings, cvarName, cvarValue);
     Format(item, sizeof(item), "%s \"%s\"", cvarName, cvarValue);
 
     panel.DrawText(item);

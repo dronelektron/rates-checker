@@ -1,61 +1,84 @@
 static char g_cvarNames[][] = {
-    CVAR_CL_INTERP,
-    CVAR_CL_INTERP_RATIO,
-    CVAR_CL_CMD_RATE,
-    CVAR_CL_UPDATE_RATE,
-    CVAR_RATE
+    "cl_interp",
+    "cl_interp_ratio",
+    "cl_cmdrate",
+    "cl_updaterate",
+    "rate"
 };
 
-static StringMap g_settings[MAXPLAYERS + 1];
-static int g_settingsCounter[MAXPLAYERS + 1];
+static ValueType g_valueType[] = {
+    ValueType_Float,
+    ValueType_Float,
+    ValueType_Float, // Should be "Int", but Source Engine considers it as "Float", weird...
+    ValueType_Int,
+    ValueType_Int
+};
 
-void Settings_Create(int client) {
-    g_settings[client] = new StringMap();
+void Settings_GetCvarName(int index, char[] cvarName) {
+    strcopy(cvarName, CVAR_NAME_SIZE, g_cvarNames[index]);
 }
 
-void Settings_Destroy(int client) {
-    delete g_settings[client];
+ValueType Settings_GetValueType(int index) {
+    return g_valueType[index];
+}
+
+void Settings_Get(StringMap settings, const char[] cvarName, char[] cvarValue) {
+    settings.GetString(cvarName, cvarValue, CVAR_VALUE_SIZE);
 }
 
 int Settings_Size() {
     return sizeof(g_cvarNames);
 }
 
-void Settings_Get(int client, const char[] cvarName, char[] cvarValue) {
-    g_settings[client].GetString(cvarName, cvarValue, CVAR_VALUE_SIZE);
+void Settings_QueryForClient(int client, int target, QueryType queryType) {
+    StringMap bundle = Bundle_CreateForClient(client, queryType);
+
+    Settings_Query(target, bundle);
 }
 
-void Settings_Set(int client, const char[] cvarName, const char[] cvarValue) {
-    g_settings[client].SetString(cvarName, cvarValue);
+void Settings_QueryForServer(int target, QueryType queryType) {
+    StringMap bundle = Bundle_CreateForServer(queryType);
+
+    Settings_Query(target, bundle);
 }
 
-void Settings_Query(int client, int target) {
-    int clientId = GetClientUserId(client);
-
-    g_settingsCounter[client] = 0;
-
+void Settings_Query(int target, StringMap bundle) {
     for (int i = 0; i < Settings_Size(); i++) {
-        Settings_Set(client, g_cvarNames[i], CVAR_VALUE_EMPTY);
-        QueryClientConVar(target, g_cvarNames[i], Settings_Result, clientId);
+        QueryClientConVar(target, g_cvarNames[i], Settings_Result, bundle);
     }
 }
 
-void Settings_Result(QueryCookie cookie, int target, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int clientId) {
-    if (result != ConVarQuery_Okay) {
+void Settings_Result(QueryCookie cookie, int target, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, StringMap bundle) {
+    if (result == ConVarQuery_Okay) {
+        Bundle_SetCvar(bundle, cvarName, cvarValue);
+    } else {
+        Bundle_SetAsFailed(bundle);
+    }
+
+    Bundle_IncrementCounter(bundle);
+
+    if (Bundle_GetCounter(bundle) == Settings_Size()) {
+        Settings_UnpackBundle(bundle, target);
+        Bundle_Destroy(bundle);
+    }
+}
+
+void Settings_UnpackBundle(StringMap bundle, int target) {
+    if (Bundle_IsFailed(bundle)) {
         return;
     }
 
-    int client = GetClientOfUserId(clientId);
+    QueryType queryType = Bundle_GetQueryType(bundle);
+    StringMap settings = Bundle_GetSettings(bundle);
 
-    if (client == INVALID_CLIENT) {
-        return;
-    }
+    if (queryType == QueryType_Menu) {
+        int clientId = Bundle_GetClientId(bundle);
+        int client = GetClientOfUserId(clientId);
 
-    Settings_Set(client, cvarName, cvarValue);
-
-    g_settingsCounter[client]++;
-
-    if (g_settingsCounter[client] == Settings_Size()) {
-        Menu_Rates(client, target);
+        if (client != INVALID_CLIENT) {
+            Menu_Rates(client, target, settings);
+        }
+    } else {
+        UseCase_OnCheckSettings(target, settings);
     }
 }
