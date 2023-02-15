@@ -24,12 +24,12 @@ Allows you to check player rates:
 * sm_rateschecker_interp_max - "Maximum value of 'cl_interp'" [default: "0.5"]
 * sm_rateschecker_interp_ratio_min - "Minimum value of 'cl_interp_ratio'" [default: "1.0"]
 * sm_rateschecker_interp_ratio_max - "Maximum value of 'cl_interp_ratio'" [default: "2.0"]
-* sm_rateschecker_cmdrate_min - "Minimum value of 'cl_cmdrate'" [default: "33"]
+* sm_rateschecker_cmdrate_min - "Minimum value of 'cl_cmdrate'" [default: "30"]
 * sm_rateschecker_cmdrate_max - "Maximum value of 'cl_cmdrate'" [default: "66"]
-* sm_rateschecker_updaterate_min - "Minimum value of 'cl_updaterate'" [default: "33"]
+* sm_rateschecker_updaterate_min - "Minimum value of 'cl_updaterate'" [default: "20"]
 * sm_rateschecker_updaterate_max - "Maximum value of 'cl_updaterate'" [default: "66"]
-* sm_rateschecker_rate_min - "Minimum value of 'rate'" [default: "30000"]
-* sm_rateschecker_rate_max - "Maximum value of 'rate'" [default: "60000"]
+* sm_rateschecker_rate_min - "Minimum value of 'rate'" [default: "80000"]
+* sm_rateschecker_rate_max - "Maximum value of 'rate'" [default: "100000"]
 
 ### Console Commands
 
