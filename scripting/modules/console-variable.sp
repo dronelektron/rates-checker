@@ -1,8 +1,10 @@
 static ConVar g_validationMode = null;
+static ConVar g_checkOnSpawn = null;
 static ConVar g_cvarLimits[Cvar_Amount];
 
 void Variable_Create() {
     g_validationMode = CreateConVar("sm_rateschecker_validation_mode", "2", "Validation mode (disabled - 0, type - 1, type and value - 2)");
+    g_checkOnSpawn = CreateConVar("sm_rateschecker_check_on_spawn", "1", "Enable (1) or disable (0) settings check on spawn");
 
     g_cvarLimits[Cvar_InterpMin] = CreateConVar("sm_rateschecker_interp_min", "0.0", "Minimum value of 'cl_interp'");
     g_cvarLimits[Cvar_InterpMax] = CreateConVar("sm_rateschecker_interp_max", "0.5", "Maximum value of 'cl_interp'");
@@ -18,6 +20,10 @@ void Variable_Create() {
 
 int Variable_ValidationMode() {
     return g_validationMode.IntValue;
+}
+
+bool Variable_CheckOnSpawn() {
+    return g_checkOnSpawn.IntValue == 1;
 }
 
 int Variable_CvarLimitInteger(int cvarIndex) {
