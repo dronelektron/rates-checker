@@ -29,7 +29,7 @@ public Plugin myinfo = {
     name = "Rates checker",
     author = "Dron-elektron",
     description = "Allows you to check player rates",
-    version = "1.4.0",
+    version = "1.4.1",
     url = "https://github.com/dronelektron/rates-checker"
 };
 
