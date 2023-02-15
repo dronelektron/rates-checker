@@ -20,6 +20,7 @@ Allows you to check player rates:
 ### Console Variables
 
 * sm_rateschecker_validation_mode - Validation mode (disabled - 0, type - 1, type and value - 2) [default: "2"]
+* sm_rateschecker_check_on_spawn - Enable (1) or disable (0) settings check on spawn [default: "1"]
 * sm_rateschecker_interp_min - "Minimum value of 'cl_interp'" [default: "0.0"]
 * sm_rateschecker_interp_max - "Maximum value of 'cl_interp'" [default: "0.5"]
 * sm_rateschecker_interp_ratio_min - "Minimum value of 'cl_interp_ratio'" [default: "1.0"]
