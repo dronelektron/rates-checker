@@ -2,7 +2,10 @@
 #include <sdktools>
 #include <regex>
 
+#include "morecolors"
+
 #include "rc/bundle"
+#include "rc/console-variable"
 #include "rc/menu"
 #include "rc/message"
 #include "rc/settings"
@@ -20,6 +23,8 @@
 #include "modules/use-case.sp"
 #include "modules/validator.sp"
 
+#define AUTO_CREATE_YES true
+
 public Plugin myinfo = {
     name = "Rates checker",
     author = "Dron-elektron",
@@ -34,6 +39,7 @@ public void OnPluginStart() {
     Validator_Create();
     LoadTranslations("common.phrases");
     LoadTranslations("rates-checker.phrases");
+    AutoExecConfig(AUTO_CREATE_YES, "rates-checker");
 }
 
 public void OnPluginEnd() {

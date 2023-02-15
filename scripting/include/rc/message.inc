@@ -4,3 +4,4 @@
 #define _rc_message_included
 
 #define PREFIX "[Rates checker] "
+#define PREFIX_COLORED "Prefix"
