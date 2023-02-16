@@ -70,7 +70,7 @@ void UseCase_CheckSettingsRange(int client, StringMap settings) {
 
 bool UseCase_CheckIntegerType(int client, const char[] cvarName, const char[] cvarValue) {
     if (!Validator_IsInt(cvarValue)) {
-        KickClient(client, "%t", "Not integer value", cvarName, cvarValue);
+        KickClient(client, "%t", "Invalid integer format", cvarName, cvarValue);
         Message_PlayerKickedForInvalidType(client, cvarName, cvarValue);
 
         return false;
@@ -81,7 +81,7 @@ bool UseCase_CheckIntegerType(int client, const char[] cvarName, const char[] cv
 
 bool UseCase_CheckFloatType(int client, const char[] cvarName, const char[] cvarValue) {
     if (!Validator_IsFloat(cvarValue)) {
-        KickClient(client, "%t", "Not float value", cvarName, cvarValue);
+        KickClient(client, "%t", "Invalid float format", cvarName, cvarValue);
         Message_PlayerKickedForInvalidType(client, cvarName, cvarValue);
 
         return false;
