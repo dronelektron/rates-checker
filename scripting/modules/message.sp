@@ -1,6 +1,6 @@
 void Message_PlayerKickedForInvalidType(int client, const char[] cvarName, const char[] cvarValue) {
-    CPrintToChatAll("%t%t", PREFIX_COLORED, "Player kicked for invalid value type", client, cvarName, cvarValue);
-    LogMessage("\"%L\" kicked for '%s' = '%s' (invalid value type)", client, cvarName, cvarValue);
+    CPrintToChatAll("%t%t", PREFIX_COLORED, "Player kicked for invalid value format", client, cvarName, cvarValue);
+    LogMessage("\"%L\" kicked for '%s' = '%s' (invalid value format)", client, cvarName, cvarValue);
 }
 
 void Message_PlayerKickedForInvalidValue(int client, const char[] cvarName, const char[] cvarValue) {

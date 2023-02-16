@@ -5,10 +5,10 @@
         "en"    "{arcana}[Rates checker]{default} "
     }
 
-    "Player kicked for invalid value type"
+    "Player kicked for invalid value format"
     {
         "#format"   "{1:N},{2:s},{3:s}"
-        "en"    "Player {wheat}{1}{default} kicked for {lightpink}\"{2}\" = \"{3}\"{default} (invalid value type)"
+        "en"    "Player {wheat}{1}{default} kicked for {lightpink}\"{2}\" = \"{3}\"{default} (invalid value format)"
     }
 
     "Player kicked for invalid value"
@@ -17,28 +17,28 @@
         "en"    "Player {wheat}{1}{default} kicked for {lightpink}\"{2}\" = \"{3}\"{default} (invalid value)"
     }
 
-    "Not integer value"
+    "Invalid integer format"
     {
         "#format"   "{1:s},{2:s}"
-        "en"    "Not an integer value type.\nConsole variable {1} = \"{2}\"\nValue must contain only digits"
+        "en"    "Invalid value format\nConsole variable \"{1}\" = \"{2}\"\nThe value must contain only digits"
     }
 
-    "Not float value"
+    "Invalid float format"
     {
         "#format"   "{1:s},{2:s}"
-        "en"    "Not a float value type.\nConsole variable {1} = \"{2}\"\nThe value must contain only digits, integer and/or fractional parts"
+        "en"    "Invalid value format\nConsole variable \"{1}\" = \"{2}\"\nThe value must contain only digits, integer and/or fractional parts"
     }
 
     "Invalid integer value"
     {
         "#format"   "{1:s},{2:s},{3:d},{4:d}"
-        "en"    "Invalid value\nConsole variable \"{1}\" = \"{2}\"\nValue must be between {3} and {4}"
+        "en"    "Invalid value\nConsole variable \"{1}\" = \"{2}\"\nThe value must be between {3} and {4}"
     }
 
     "Invalid float value"
     {
         "#format"   "{1:s},{2:s},{3:f},{4:f}"
-        "en"    "Invalid value\nConsole variable \"{1}\" = \"{2}\"\nValue must be between {3} and {4}"
+        "en"    "Invalid value\nConsole variable \"{1}\" = \"{2}\"\nThe value must be between {3} and {4}"
     }
 
     "No previous player"
