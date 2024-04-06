@@ -1,7 +1,7 @@
-#if defined _rc_message_included
+#if defined _rates_checker_message_included
  #endinput
 #endif
-#define _rc_message_included
+#define _rates_checker_message_included
 
 #define COLOR_DEFAULT "\x01"
 

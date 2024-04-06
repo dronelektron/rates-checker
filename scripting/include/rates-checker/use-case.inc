@@ -1,7 +1,7 @@
-#if defined _rc_use_case_included
+#if defined _rates_checker_use_case_included
  #endinput
 #endif
-#define _rc_use_case_included
+#define _rates_checker_use_case_included
 
 #define PRELOAD_YES true
 #define CLIENT_NOT_FOUND -1
