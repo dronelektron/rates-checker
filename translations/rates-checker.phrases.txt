@@ -1,20 +1,20 @@
 "Phrases"
 {
-    "Prefix"
+    "Prefix colored"
     {
-        "en"    "{arcana}[Rates checker]{default} "
+        "en"    "ADE55C[Rates checker] "
     }
 
     "Player kicked for invalid value format"
     {
         "#format"   "{1:N},{2:s},{3:s}"
-        "en"    "Player {wheat}{1}{default} kicked for {lightpink}\"{2}\" = \"{3}\"{default} (invalid value format)"
+        "en"    "Player F5DEB3{1} kicked for FFB6C1\"{2}\" = \"{3}\" (invalid value format)"
     }
 
     "Player kicked for invalid value"
     {
         "#format"   "{1:N},{2:s},{3:s}"
-        "en"    "Player {wheat}{1}{default} kicked for {lightpink}\"{2}\" = \"{3}\"{default} (invalid value)"
+        "en"    "Player F5DEB3{1} kicked for FFB6C1\"{2}\" = \"{3}\" (invalid value)"
     }
 
     "Invalid integer format"

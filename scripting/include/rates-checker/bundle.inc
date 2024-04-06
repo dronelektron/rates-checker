@@ -1,7 +1,7 @@
-#if defined _rc_bundle_included
+#if defined _rates_checker_bundle_included
  #endinput
 #endif
-#define _rc_bundle_included
+#define _rates_checker_bundle_included
 
 #define BUNDLE_KEY_CLIENT_ID "client_id"
 #define BUNDLE_KEY_QUERY_TYPE "query_type"

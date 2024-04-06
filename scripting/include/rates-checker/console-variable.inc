@@ -1,7 +1,7 @@
-#if defined _rc_console_variable_included
+#if defined _rates_checker_console_variable_included
  #endinput
 #endif
-#define _rc_console_variable_included
+#define _rates_checker_console_variable_included
 
 enum {
     CvarLimit_Min,

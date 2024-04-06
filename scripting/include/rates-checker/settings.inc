@@ -1,7 +1,7 @@
-#if defined _rc_settings_included
+#if defined _rates_checker_settings_included
  #endinput
 #endif
-#define _rc_settings_included
+#define _rates_checker_settings_included
 
 #define CVAR_NAME_SIZE 16
 #define CVAR_VALUE_SIZE 16

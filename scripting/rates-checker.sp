@@ -2,16 +2,14 @@
 #include <sdktools>
 #include <regex>
 
-#include "morecolors"
-
-#include "rc/bundle"
-#include "rc/console-variable"
-#include "rc/menu"
-#include "rc/message"
-#include "rc/settings"
-#include "rc/sound"
-#include "rc/use-case"
-#include "rc/validator"
+#include "rates-checker/bundle"
+#include "rates-checker/console-variable"
+#include "rates-checker/menu"
+#include "rates-checker/message"
+#include "rates-checker/settings"
+#include "rates-checker/sound"
+#include "rates-checker/use-case"
+#include "rates-checker/validator"
 
 #include "modules/bundle.sp"
 #include "modules/console-command.sp"
@@ -30,7 +28,7 @@ public Plugin myinfo = {
     name = "Rates checker",
     author = "Dron-elektron",
     description = "Allows you to check player rates",
-    version = "1.5.2",
+    version = "1.5.3",
     url = "https://github.com/dronelektron/rates-checker"
 };
 
