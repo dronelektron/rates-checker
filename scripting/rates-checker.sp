@@ -2,8 +2,6 @@
 #include <sdktools>
 #include <regex>
 
-#include "morecolors"
-
 #include "rc/bundle"
 #include "rc/console-variable"
 #include "rc/menu"

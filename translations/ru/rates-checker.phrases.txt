@@ -2,12 +2,12 @@
 {
     "Player kicked for invalid value format"
     {
-        "ru"    "Игрок {wheat}{1}{default} кикнут за {lightpink}\"{2}\" = \"{3}\"{default} (неверный формат значения)"
+        "ru"    "Игрок F5DEB3{1} кикнут за FFB6C1\"{2}\" = \"{3}\" (неверный формат значения)"
     }
 
     "Player kicked for invalid value"
     {
-        "ru"    "Игрок {wheat}{1}{default} кикнут за {lightpink}\"{2}\" = \"{3}\"{default} (неверное значение)"
+        "ru"    "Игрок F5DEB3{1} кикнут за FFB6C1\"{2}\" = \"{3}\" (неверное значение)"
     }
 
     "Invalid integer format"
